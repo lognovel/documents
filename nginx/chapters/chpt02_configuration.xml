@@ -1,0 +1,119 @@
+<chapter><title>配置</title>
+
+  <sect1><title>将日志记录到syslog</title>
+    <para>Nginx使用<command>error_log</command>和<command>access_log</command>两个指令来将日志记录到日志文件中。在配置日志的过程中，会用到下面的几个参数：</para>
+    <orderedlist>
+      <listitem><para><parameter>server=address</parameter> ：定义syslog服务器的地址，这个地址可以是一个域名或是IP地址，可以带一个端口号。如果端口没有指定，那就会使用UDP的514端口向syslog服务器发送日志信息。如果域名被解析为多个IP地址，那第一个被解析出来的IP地址会作为syslog服务器的地址。或者，也可以使用“UNIX-domain socket”的方式来指定。</para></listitem>
+      <listitem><para><parameter>facility=string</parameter> ：设置syslog消息的facility（日志设施）。根据RFC3164的定义，Facility是 kern、user、mail、daemon、auth、intern、lpr、news、uucp、clock、authpriv、ftp、ntp, audit、alert、cron、local0 . . local7中的一个，默认值是 local7。</para></listitem>
+      <listitem><para><parameter>severity=string</parameter> ：这个参数在error日志消息中是由nginx来决定的，不采用syslog的定义方式。severity这个参数仅适用于access_log。</para><para>这个参数用于定义access_log消息的“严重（severity）”级别，根据RFC3164的定义，一共有8各级别，分别是：Emergency、Alert、Critical、Error、Warning、notice、Informational和Debug。</para>
+        
+      </listitem>
+      <listitem><para><parameter>tag=string</parameter> ：设置日志消息的标签。默认是“nginx”。</para></listitem>
+      <listitem><para><parameter>nohostname</parameter> ：禁止将“hostname”这个字段添加到日志消息的头部。</para></listitem>
+    </orderedlist>
+    <para>下面的代码展示了将日志记录到syslog的配置：</para>
+    <screen>error_log syslog:server=192.168.1.1 debug;
+
+access_log syslog:server=unix:/var/log/nginx.sock,nohostname;
+access_log syslog:server=[2001:db8::1]:12345,facility=local7,tag=nginx,severity=info combined;</screen>
+  </sect1>
+
+  <sect1><title>access_log：访问日志配置</title>
+  
+  <para>Nginx中主要通过三个指令来配置访问日志（access_log）：</para>
+  <orderedlist>
+    <listitem><command>log_format</command>：定义日志的具体格式、日志条目中包含哪些信息、排列的顺序等。</listitem> 
+    <listitem><command>access_log</command>：指定访问日志的存储位置、使用哪种日志格式等。</listitem>
+    <listitem><command>open_log_file_cache</command>：此指令来设置缓存，提升性能。</listitem>
+
+  </orderedlist>  
+  <para>其中，<command>log_format</command>、<command>access_log</command>和<command>open_log_file_cache</command>位于Nginx文档的“Module ngx_http_log_module”部分。</para>
+  
+    <sect2><title>log_format</title>
+      <para><command>log_format</command>用来定义日志的具体格式、日志条目中包含哪些信息、排列的顺序等。一次定义，多次使用。它的父节点或上下文（context）是<command>http</command>。</para>
+      <para><command>log_format</command>的配置格式如下：</para>
+      <para><screen>log_format name [escape=default|json|none] string ...;</screen></para>
+      <para>其中，<filename>name</filename>是要定义的日志格式的名称。这个名称会在<command>access_log</command>指令中被引用。有一个名字称为<emphasis>combined</emphasis>的“格式”已经被系统定义了。默认情况下，就是使用这个。<command>combined</command>中包含的变量及排列顺序如下：</para>
+      <screen>log_format combined '$remote_addr - $remote_user [$time_local] '
+                    '"$request" $status $body_bytes_sent '
+                    '"$http_referer" "$http_user_agent"'; </screen>
+      <para><command>escape</command>参数用来设置日志中变量的json或default字符转义（escaping）。默认情况下使用的是<command>default</command>。用Nginx官方的解释就是：</para>
+      <itemizedlist>
+        <listitem><para><command>default</command>：对default来说，字符“"”、“\”及其他值小于32大于126的字符，被转义为“\xXX”，如果变量的值没有找到，那将会使用连字符“-”来代替。</para>
+        </listitem>
+        <listitem><para><command>json</command>：对json来说，所有不允许出现在json字符串<footnote><para>关于json的相关知识请参考：<link xlink:href="https://datatracker.ietf.org/doc/html/rfc8259/"></link></para></footnote>里的字符都会被转义。</para><para>字符“"”和“\” 被转义为“\"”和“\\”，值小于32的字符转义为“\n” “\r” “\t” “\b” “\f”或“\u00XX”。</para>
+        </listitem>
+        <listitem><para><command>none</command>：none就是禁用转义。</para>
+        </listitem>
+      </itemizedlist>
+      <para>简尔言之，<command>escape</command>的目的就是将日志中很多变量值里的字符进行转义后再进行存储的。具体有哪些变量，在文后会详细的列出。</para>
+      
+
+    </sect2>
+  
+    <sect2><title>access_log</title>
+      <para><command>access_log</command>指令是设置日志写入时的路径、格式及缓存相关配置的。它的设置语法如下：</para>
+      <screen>access_log path [format [buffer=size] [gzip[=level]] [flush=time] [if=condition]];
+access_log off;</screen>
+      <orderedlist>
+        <listitem><para><parameter>path</parameter>指的是日志的存储路径，如：<filename>/var/log/nginx/access.log</filename></para>
+        </listitem>
+        <listitem><para><parameter>format</parameter>指的是日志存储使用的格式，就是前面使用<command>log_format</command>指令定义好的格式，如果在这里没有使用，那么就使用系统预定义好的格式<parameter>combined</parameter>。</para>
+        </listitem>
+        <listitem><para><parameter>buffer</parameter>设置日志缓冲区的大小。当缓冲区的日志数据超出该设定值时，缓冲区的日志数据就会被写到磁盘文件上。默认情况下，这个数值是64K。</para>
+        </listitem>
+        <listitem><para><parameter>gzip</parameter>设置缓冲区日志数据的压缩级别，在缓冲区日志数据被写入到磁盘文件之前会被压缩。压缩的级别为1到9，数字约大，压缩越大。默认级别为1。</para>
+        </listitem>
+        <listitem><para><parameter>flush</parameter>设置日志缓冲区刷新的时间间隔，当时间超过这个值时，缓冲区数据就会被写到磁盘文件。</para>
+        </listitem>
+        <listitem><para><parameter>if</parameter>根据条件设置是否记录日志。当if所包含的条件为0或空时，日志不会被记录。</para>
+           <programlisting linenumbering="numbered" language="common"><?dbfo pgwide="0"?><textobject><textdata  fileref="source/nginx-if.txt"/></textobject></programlisting>
+        </listitem>
+        <listitem><para><parameter>off</parameter>取消当前级别上的日志记录。</para>
+        </listitem>                
+         
+      </orderedlist>
+    </sect2>
+
+    <sect2><title>open_log_file_cache</title>
+      <para><command>open_log_file_cache</command>默认配置下，Nginx每次将缓冲区（buffer） 里的日志数据写入到磁盘中时，都需要打开相应的日志文件，并获得该文件的句柄，利用该句柄向文件中写入数据，写入完成后关闭该句柄。该指令把句柄存储在缓存中，从而提升写入的效率。它的设置语法如下：</para>
+      <screen>open_log_file_cache max=N [inactive=time] [min_uses=N] [valid=time];
+open_log_file_cache off;</screen>
+
+      <orderedlist>
+        <listitem><para><parameter>max</parameter>设置缓存中最多容纳的文件描述符数量，如果被占满，采用LRU算法将描述符关闭。</para>
+        </listitem>
+        <listitem><para><parameter>inactive</parameter>设置缓存存活时间，默认是10s。</para>
+        </listitem>
+        <listitem><para><parameter>min_uses</parameter>在inactive时间段内，日志文件最少使用几次，该日志文件句柄记入缓存，默认是1次。</para>
+        </listitem>
+        <listitem><para><parameter>valid</parameter>设置多久对日志文件名进行检查，看是否发生变化，默认是60s。</para>
+        </listitem>
+        <listitem><para><parameter>off</parameter>不使用缓存。默认为off。</para>
+        </listitem>
+         
+      </orderedlist>
+
+    </sect2>
+
+  </sect1>
+
+  <sect1><title>error_log：错误日志配置</title>
+    <para><command>error_log</command>位于Nginx文档的“Core functionality”部分。</para>
+    <para>当Nginx的配置或者在运行时出现错误时，所产生的错误信息将会被记录到“错误日志”中。“错误日志”通过<command>error_log</command>指令来进行配置。与<command>access_log</command>不同的是，日志的格式不支持自定义。具体格式如下：</para>
+    <screen>error_log file [level];</screen>
+      <orderedlist>
+        <listitem><para><parameter>file</parameter>指定错误日志的存放文件，如：<filename>/var/log/error_log</filename>。</para>
+        </listitem>
+        <listitem><para><parameter>[level]</parameter>level表示日志等级，日志等级分为debug, info, notice, warn, error, crit, alert, emerg。可以看到其取值范围是按紧急程度从低到高排列的。debug的输出最为详细。只有日志的错误级别等于或高于level指定的值才会写入错误日志中。error是实际生产环境中常用的输出级别。默认值是error。</para>
+        </listitem>         
+      </orderedlist>
+      <screen>Default:	
+error_log logs/error.log error;
+Context:	main, http, mail, stream, server, location
+</screen>
+    <para>需要注意的是：error_log off并不能关闭错误日志，而是会将错误日志记录到一个文件名为off的文件中。正确的关闭错误日志记录功能的方法如下：</para>
+    <screen>error_log /dev/null;</screen>
+  </sect1>
+
+</chapter>

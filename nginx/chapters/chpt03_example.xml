@@ -1,0 +1,104 @@
+<chapter><title>配置案例及日志解析</title>
+  <sect1><title>环境说明</title>
+    <para>为了能更清晰地描述，我们在局域网中设立一台nginx服务器，我们称为<emphasis>Server</emphasis>，其内网IP地址是192.168.31.2/24，外网IP地址是192.168.1.2/24。我们在其上安装Debian Linux（V12）。使用如下命令安装nginx：</para>
+    <blockquote><command>apt-get install nginx-full</command></blockquote>
+    <para>安装结束后，nginx的配置文件位于<filename>/etc/nginx</filename>目录下，日志文件默认位于<filename>/var/log/nginx</filename>目录下。</para>
+    <figure pgwide="0"><title>nginx服务器网络拓扑图</title><graphic fileref="images/env.png" width="200px"/></figure>
+  </sect1>
+
+  <sect1><title>案例</title>
+    <sect2><title>默认情况</title>
+      <para>在默认情况下，我们不使用<command>log_format</command>来命名和定义日志格式，使用nginx默认的<emphasis>combined</emphasis>格式。在前文中我们已经提到combined的格式如下：</para>
+      <screen>log_format combined '$remote_addr - $remote_user [$time_local] '
+                    '"$request" $status $body_bytes_sent '
+                    '"$http_referer" "$http_user_agent"'; </screen>
+      <para>我们在<filename>/etc/nginx/nginx.conf</filename>中加入如下一行：</para>
+      <screen>access_log /var/log/nginx/access.log;</screen>
+      <para>接下来，使用<command>/etc/init.d/nginx restart</command>重新启动nginx的web服务。然后通过一台客户端的Chrome浏览器访问<emphasis>Server</emphasis>：<userinput>http://192.168.31.2/lognovel.html</userinput>，那么在<emphasis>Server</emphasis>的<filename>/var/log/nginx/access.log</filename>中，会出现如下一行记录：</para>
+      <screen>192.168.31.7 - - [11/Oct/2021:09:07:43 +0000] 
+      "GET /lognovel.html HTTP/1.1" 200 418 
+      "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) 
+           Chrome/94.0.4606.71 Safari/537.36"</screen>
+      <para>上面的记录实际上是在一行里，为了描述方便，我们把它分为四行。根据<emphasis>combined</emphasis>的描述，很容易将这段日志解析出来：</para>
+      <orderedlist>
+        <listitem>第一行：192.168.31.7是<parameter>$remote_addr</parameter>；第一个“-”是定义中固定的；第二个是<parameter>$remote_user</parameter>，因为这里<parameter>$remote_user</parameter>为空，所以被转义为“-”。</listitem>
+        <listitem>第二行：<parameter>"GET /lognovel.html HTTP/1.1"</parameter>是<parameter>"$request"</parameter>；<parameter>200</parameter>是<parameter>$status</parameter><footnote><para>更多状态码请参考：<link xlink:href="https://datatracker.ietf.org/doc/html/rfc2616/">RFC2616</link></para></footnote>，<parameter>200</parameter>代表“ok”； <parameter>418</parameter>是<parameter>$body_bytes_sent</parameter>，返回给客户端的响应体的字节数（即不含响应头）</listitem>
+        <listitem>第三行和第四行：“-”是指<parameter>$http_referer</parameter>，这里为空，所以使用“-”进行了转意。剩下的内容全部代表了客户端浏览器的信息。</listitem>
+      </orderedlist> 
+    </sect2>
+    
+    <sect2><title>使用json转义存储日志</title>
+      <para>前面的两种情况使用的都是<parameter>escape=default</parameter>，下面我们再看一个<parameter>escape=json</parameter>的例子。我们仍然使用<emphasis>combined</emphasis>里的8个变量，在<filename>/etc/nginx/nginx.conf</filename>中添加如下的行：</para>
+      <screen>log_format simplejson escape=json '$remote_addr - $remote_user [$time_local] '
+                                '"$request" $status $body_bytes_sent '
+                                '"$http_referer" "$http_user_agent"';
+access_log /var/log/nginx/access.log simplejson;</screen>
+      <para>在这个配置中，我们新增加了一个“日志格式”：<parameter>simplejson</parameter>，然后在<command>access_log</command>指令中引用它。它所使用的变量及排列顺序与<emphasis>combined</emphasis>完全一致。接下来，我们在客户端再次访问<userinput>http://192.168.31.2/lognovel.html</userinput>，然后看<filename>/var/log/nginx/access.log</filename>会出现什么？</para>
+      <screen>192.168.31.7 -  [13/Oct/2021:03:42:58 +0000] 
+      "GET /lognovel.html HTTP/1.1" 200 418 
+      "" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) 
+          Chrome/94.0.4606.71 Safari/537.36"</screen>
+      <para>与<parameter>escape=default</parameter>比较，在<parameter>escape=json</parameter>情况下，<parameter>$remote_user</parameter>和<parameter>$http_referer</parameter>没有转义为“-”。而是使用了“空”。关于json字符的相关标准可以参考：<link xlink:href="https://datatracker.ietf.org/doc/html/rfc8259/"/></para>     
+    </sect2>
+    
+    
+    <sect2><title>自定义日志格式</title>
+      <para><emphasis>combined</emphasis>中使用了8个字段（变量）来记录日志信息，接下来我们使用自定义的方式来记录日志信息，为了表述方便，我们只使用三个字段：时间戳<parameter>$time_iso8601</parameter>、客户端地址<parameter>$remote_addr</parameter>、客户端端口<parameter>$remote_port</parameter>以及请求信息<parameter>$request</parameter>，并且这四个字段使用“：”隔开。我们在<filename>/etc/nginx/nginx.conf</filename>文件中添加如下两行：</para>
+      <screen>log_format simplelog '$time_iso8601 : $remote_addr : $remote_port : $request'; 
+access_log /var/log/nginx/access.log simplelog;</screen>
+      <para>我们在配置文件中做了两件事情：</para>
+      <orderedlist>
+        <listitem>定义<parameter>simplelog</parameter>日志格式，只记录四个字段：<parameter>$time_local</parameter>、<parameter>$remote_addr</parameter>、<parameter>$remote_port</parameter>以及<parameter>$request</parameter>，并且这三个字段使用“：”隔开。</listitem>
+        <listitem>使用<command>access_log</command>指令来使用<parameter>simplelog</parameter>这个日志格式。</listitem>
+      </orderedlist>
+      <para>接下来通过客户端的Chrome浏览器再次访问<emphasis>Server</emphasis>：<userinput>http://192.168.31.2/lognovel.html</userinput>，那么在<emphasis>Server</emphasis>的<filename>/var/log/nginx/access.log</filename>中，会出现如下一行记录：</para>
+      <screen>2021-10-12T07:23:47+00:00 : 192.168.31.7 : 56008 : GET /lognovel.html HTTP/1.1</screen>
+      <para>可以看出，nginx已经按照要求记录了日志。从这条记录里，顺便还可以比较一下两个不同的时间戳变量<parameter>$time_local</parameter>与<parameter>$time_iso8601</parameter>的区别。</para>
+      
+    </sect2>
+    
+    <sect2><title>使用完整的json格式</title>
+      <para>为方便后期的处理，也可以将日志存储为完全的json格式，如下，我们在配置文件中定义一个新的格式<parameter>jsonlog</parameter>：</para>      
+      <screen>log_format jsonlog  escape=json '{"@timestamp":"$time_iso8601",'
+                '"server_addr":"$server_addr",'
+                '"remote_addr":"$remote_addr",'
+                '"host":"$host",'
+                '"uri":"$uri",'
+                '"body_bytes_sent":$body_bytes_sent,'
+                '"bytes_sent":$body_bytes_sent,'
+                '"upstream_response_time":$upstream_response_time,'
+                '"request":"$request",'
+                '"request_length":$request_length,'
+                '"request_time":$request_time,'
+                '"status":"$status",'
+                '"http_referer":"$http_referer",'
+                '"http_x_forwarded_for":"$http_x_forwarded_for",'
+                '"http_user_agent":"$http_user_agent"'
+                '}';
+
+access_log /var/log/nginx/access.log jsonlog;</screen>
+      <para>在这个配置中，我们新增加了一个“日志格式”：<parameter>jsonlog</parameter>，然后在<command>access_log</command>指令中引用它。接下来，我们在客户端再次访问<userinput>http://192.168.31.2/lognovel.html</userinput>，然后看<filename>/var/log/nginx/access.log</filename>会出现什么？</para>
+      <screen>{"@timestamp":"2021-10-18T03:05:19+00:00",
+ "server_addr":"192.168.31.2",
+ "remote_addr":"192.168.31.7",
+ "host":"192.168.31.2",
+ "uri":"/lognovel.html",
+ "body_bytes_sent":0,
+ "bytes_sent":0,"upstream_response_time":,
+ "request":"GET /lognovel.html HTTP/1.1",
+ "request_length":543,
+ "request_time":0.000,
+ "status":"304",
+ "http_referer":"",
+ "http_x_forwarded_for":"",
+ "http_user_agent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) 
+                   Chrome/94.0.4606.81 Safari/537.36"
+}</screen>
+      <para>nginx已经生成了一条完整的json日志记录。</para>     
+    </sect2>
+    
+    
+  </sect1>
+  
+
+</chapter>

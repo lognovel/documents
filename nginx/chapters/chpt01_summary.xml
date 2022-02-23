@@ -1,0 +1,44 @@
+<chapter><title>nginx</title>
+
+  <sect1><title>nginx简介</title>
+    <para>Nginx[engine-x]是一个高性能的HTTP、web代理、邮件代理、通用的TCP/UDP代理服务器软件。最初由俄罗斯人Igor Sysoev开发。很长一段时间以来，很多俄罗斯的站点都在使用它。现在nginx已经在全球范围内得到了广泛的应用。在2019年，nginx的商业化运营被知名的F5收购。从nginx的商业站点我们可以看到它一个简短的历史：<link xlink:href="https://www.nginx.com/careers/#history-nginx"></link></para>
+    <orderedlist>
+      <listitem><para><emphasis>2004年</emphasis>：俄罗斯人Igor Sysoev为了解决C10K问题<footnote><para>C10K是关于如何解决10000个并发连接的问题，可以参考http://www.kegel.com/c10k.html</para></footnote>创建了nginx。nginx比较完美的解决了这个问题。得到很多站点的认可。</para>
+      </listitem>
+      <listitem><para><emphasis>2011年</emphasis>：Igor Sysoev联合创办了NGINX公司，支持nginx及nginx-Plus的开发。并为用户提供企业级和专业的服务。从C10问题起步，nginx用了6年的时间，跃升为世界级的服务器软件产品。 </para>
+      </listitem>
+      
+      <listitem><para><emphasis>2013年</emphasis>：nginx-plus第一个版本正式发布。这个版本可以为用户的web应用提供高性能的web服务、强大的负载均衡服务、高伸缩性的加速服务。</para>
+      </listitem>
+      <listitem><para><emphasis>2016年</emphasis>：NGINX Inc.的员工超过100人。用他们自己的话说就是：“作为web的心脏，NGINX的很多雇员在应用开发和部署领域都是很有前瞻性头脑的人。” </para>
+      </listitem>
+      <listitem><para><emphasis>2017年</emphasis>：NGINX收获了1000个客户。</para>
+      </listitem>
+      <listitem><para><emphasis>2018年</emphasis>：超过450M个web站点在使用nginx。  </para>
+      </listitem>
+      <listitem><para><emphasis>2019年</emphasis>：F5收购NGINX Inc.。  </para>
+      </listitem>
+    </orderedlist>
+    <para>根据netcraft的调查，截至到2021年8月，nginx在整个Internet的使用量已经占到了22.38%的份额。而且还在不断上升。</para>
+    <figure pgwide="0"><title>web服务器</title><graphic fileref="images/wss-share.png" width="380px"/></figure>
+    <para>可以参考如下的链接：</para>
+    <para><link xlink:href="https://news.netcraft.com/archives/2021/08/25/august-2021-web-server-survey.html"></link></para>
+  </sect1>
+  
+  <sect1><title>nginx日志简介</title>
+    <para>nginx日志主要分为两种：access_log(访问日志)和error_log(错误日志)。</para>
+    <orderedlist>
+      <listitem><emphasis>access_log</emphasis>
+        <para>访问日志(access_log)主要记录客户端的请求。通过<command>access_log</command>指令来实现。客户端向Nginx服务器发起的每一次请求都记录在这里。客户端IP、浏览器信息、referer、请求处理时间及请求URL等都可以在访问日志中得到。具体要记录哪些信息及记录的格式、排列顺序等，可以通过<command>log_format</command>指令进行定制。</para>
+      </listitem>
+      
+      <listitem><emphasis>error_log</emphasis>
+        <para>错误日志(error_log)记录了访问及系统的错误信息，可以帮助我们定位错误的原因。错误日志在Nginx中是通过<command>error_log</command>指令实现的。该指令记录服务器和请求处理过程中的错误信息。与access_log不同的是，error_log的日志不能使用<command>log_format</command>指令进行定制。</para>
+      </listitem>
+    </orderedlist>
+    <para>另外，在access_log和log_format中使用了很多变量，详细的变量信息可以参考Nginx官方文档。<link xlink:href="https://nginx.org/en/docs/varindex.html">nginx变量参考站点</link></para>
+  </sect1>
+  
+  
+
+</chapter>

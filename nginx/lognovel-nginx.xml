@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE book 
+[
+    <!ENTITY legalnotice SYSTEM "../sharefiles/legalnotice.xml">
+    <!ENTITY info SYSTEM "info.xml">
+    <!ENTITY preface SYSTEM "../sharefiles/preface.xml">
+
+    <!ENTITY chpt01_summary SYSTEM "chapters/chpt01_summary.xml">
+    <!ENTITY chpt02_configuration SYSTEM "chapters/chpt02_configuration.xml">
+    <!ENTITY chpt03_example SYSTEM "chapters/chpt03_example.xml">
+    
+    <!ENTITY appdendix01_var SYSTEM "chapters/appendix01_var.xml">
+    <!ENTITY appdendix02_status SYSTEM "chapters/appendix02_status.xml">
+
+]>
+<book xmlns:xlink='http://www.w3.org/1999/xlink'
+      xml:lang="zh_cn">
+
+
+<title>Nginx日志参考手册</title>
+<subtitle>格式、配置和使用</subtitle>
+&info;
+
+&preface;
+
+&chpt01_summary;
+&chpt02_configuration;
+&chpt03_example;
+
+&appdendix01_var;
+&appdendix02_status;
+
+
+</book>

@@ -1,0 +1,22 @@
+http {
+
+    map $status $normal {
+        ~^2  1;
+        default 0;
+    }
+    map $status $abnormal {
+        ~^2  0;
+        default 1;
+    }
+    map $remote_addr $islocal {
+        ~^127  1;
+        default 0;}
+
+    server {
+
+        access_log logs/access.log combined if=$normal;
+        access_log logs/access_abnormal.log combined if=$abnormal;
+        access_log logs/access_local.log combined if=$islocal;
+
+    }  
+}
