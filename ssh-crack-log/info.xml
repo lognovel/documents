@@ -1,0 +1,30 @@
+<info>
+
+    <mediaobject><imageobject> <imagedata fileref="images/logo_title.svg"/></imageobject></mediaobject>
+    <corpauthor>上海榄果数字科技有限公司</corpauthor>
+    <author><firstname>&lt;doc@lognovel.com&gt;</firstname><surname></surname>
+           <!-- email>chunxin@lognovel</email -->
+    </author>
+
+    <copyright>
+      <year>2022</year>
+      <holder>上海榄果数字科技有限公司</holder>       
+    </copyright>
+
+    <pubdate>2022/01/27 </pubdate>
+    <volumenum>[ docID: lognovel<?dbtimestamp format="Y"?><?dbtimestamp format="m"?><?dbtimestamp format="d"?><?dbtimestamp format="H"?><?dbtimestamp format="M"?><?dbtimestamp format="S"?> ]</volumenum>
+
+    <!-- releaseinfo>Exported by dogen [http://lognovel.com/dogen] , on <?dbtimestamp format="Y-m-d"?> at <?dbtimestamp format="H:M:S"?> </releaseinfo -->
+  
+
+    <revhistory>
+      <revision>
+        <revnumber>1.0</revnumber>
+        <date>2022年1月19日</date>
+        <authorinitials>doc@lognovel.com</authorinitials>
+        <revremark>发布第一个Draft</revremark>
+      </revision>
+    </revhistory>
+  <!-- releaseinfo></releaseinfo -->
+  &legalnotice;
+</info>

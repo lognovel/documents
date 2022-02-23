@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE article [
+    <!ENTITY legalnotice SYSTEM "../sharefiles/legalnotice.xml">
+    <!ENTITY info SYSTEM "info.xml">
+    <!ENTITY preface SYSTEM "../sharefiles/preface.xml">
+    
+    <!ENTITY summary SYSTEM "sections/summary.xml">
+    <!ENTITY sshCrackLogFormat SYSTEM "sections/sshCrackLogFormat.xml">
+    <!ENTITY solutions SYSTEM "sections/solutions.xml">
+
+
+]>
+<article xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink='http://www.w3.org/1999/xlink' xml:lang="zh_cn">
+
+
+<title>ssh暴力破解日志简要说明</title>
+<subtitle></subtitle>
+&info;
+
+&summary;
+&sshCrackLogFormat;
+&solutions;
+</article>

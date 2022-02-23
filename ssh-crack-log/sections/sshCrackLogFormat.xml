@@ -1,0 +1,72 @@
+<sect1><title>相关日志解析</title>
+  <sect2><title>暴力破解用户名的日志</title>
+
+    <para>暴力破解用户名的日志有5个重要的字段：</para>
+    <programlistingco>
+      <areaspec units="linecolumn">
+          <area id="InvalidUser-TS-co" linkends="InvalidUser-TS" coords="1 10"/>
+          <area id="InvalidUser-ServerName-co" linkends="InvalidUser-ServerName" coords="1 18"/>
+          <area id="InvalidUser-UserName-co" linkends="InvalidUser-UserName" coords="1 50"/>
+          <area id="InvalidUser-RemoteIP-co" linkends="InvalidUser-RemoteIP" coords="1 64"/>
+          <area id="InvalidUser-RemotePort-co" linkends="InvalidUser-RemotePort" coords="1 76"/>        
+      </areaspec> 
+      
+      <programlisting language="common"><textobject><textdata  fileref="sources/InvalidUser-log.txt"/></textobject></programlisting>
+      
+      <calloutlist>
+          <callout arearefs="InvalidUser-TS-co"  id="InvalidUser-TS" >
+            <para><parameter>Jan 19 08:29:46</parameter> ：时间戳；</para>
+          </callout>
+          <callout arearefs="InvalidUser-ServerName-co"  id="InvalidUser-ServerName" >
+            <para><parameter>LogNovel</parameter> ：ssh服务器的机器名；</para>
+          </callout>
+          <callout arearefs="InvalidUser-UserName-co"  id="InvalidUser-UserName" >
+            <para><parameter>ari</parameter> ：破解工具猜测的无效的用户名；</para>
+          </callout>
+          <callout arearefs="InvalidUser-RemoteIP-co"  id="InvalidUser-RemoteIP" >
+            <para><parameter>165.232.75.221</parameter> ：破解工具使用的IP地址；</para>
+          </callout>
+          <callout arearefs="InvalidUser-RemotePort-co"  id="InvalidUser-RemotePort" >
+            <para><parameter>48646</parameter> ：暴力工具使用的端口。</para>
+          </callout>
+      </calloutlist>        
+    </programlistingco>  
+
+  </sect2>
+  
+  <sect2><title>暴力破解密码的日志</title>
+    <para>暴力破解密码的日志有5个重要的字段：</para>
+    <programlistingco>
+      <areaspec units="linecolumn">
+          <area id="FailedPassword-TS-co" linkends="FailedPassword-TS" coords="1 10"/>
+          <area id="FailedPassword-ServerName-co" linkends="FailedPassword-ServerName" coords="1 18"/>
+          <area id="FailedPassword-UserName-co" linkends="FailedPassword-UserName" coords="1 56"/>
+          <area id="FailedPassword-RemoteIP-co" linkends="FailedPassword-RemoteIP" coords="1 68"/>
+          <area id="FailedPassword-RemotePort-co" linkends="FailedPassword-RemotePort" coords="1 81"/>        
+      </areaspec> 
+      
+      <programlisting language="common"><textobject><textdata  fileref="sources/FailedPassword-log.txt"/></textobject></programlisting>
+      
+      <calloutlist>
+          <callout arearefs="FailedPassword-TS-co"  id="FailedPassword-TS" >
+            <para><parameter>Jan 19 00:00:53</parameter> ：时间戳；</para>
+          </callout>
+          <callout arearefs="FailedPassword-ServerName-co"  id="FailedPassword-ServerName" >
+            <para><parameter>LogNovel</parameter> ：ssh服务器的机器名；</para>
+          </callout>
+          <callout arearefs="FailedPassword-UserName-co"  id="FailedPassword-UserName" >
+            <para><parameter>root</parameter> ：破解工具猜测的无效的用户名；</para>
+          </callout>
+          <callout arearefs="FailedPassword-RemoteIP-co"  id="FailedPassword-RemoteIP" >
+            <para><parameter>165.22.88.72</parameter> ：破解工具使用的IP地址；</para>
+          </callout>
+          <callout arearefs="FailedPassword-RemotePort-co"  id="FailedPassword-RemotePort" >
+            <para><parameter>49300</parameter> ：暴力工具使用的端口。</para>
+          </callout>
+      </calloutlist>        
+    </programlistingco>
+  </sect2>
+
+  <para>一旦在日志中发现了这样的记录，必须要引起高度重视的。</para>
+
+</sect1> 

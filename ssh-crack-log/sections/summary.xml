@@ -1,0 +1,16 @@
+<sect1><title>概述</title>
+ <para>所有直接暴露在互联网上的机器都会或多或少的受到攻击。就比如我们经常使用的ssh服务器，可能随时都会受到来自世界各地的各种暴力破解。如果ssh服务器没有采用比较严格的用户名和密码，那我们的ssh服务器极有可能会被黑客或者暴力破解工具破解并攻陷。所以在我们的ssh服务器被破解之前，及时地知道这些信息，并采取相关的措施就显得非常重要。</para>
+ <para>幸运地是，在一个日志记录完整的系统中，所有的ssh暴力破解都会被记录在案。通常，在各种linux系统中，ssh服务器使用的一般都是openssh，在默认情况下它的日志都记录在<filename>/var/log/auth.log</filename>文件中。在这个文件中如果我们看到如下样式的日志，那么，我们的系统已经在遭受别人的破解：</para>
+ <screen>Jan 19 08:29:46 LogNovel sshd[765073]: Invalid user ari from 165.232.75.221 port 48646 <co id="InvalidUser-co" linkends="InvalidUser"/>
+Jan 19 00:00:53 LogNovel sshd[757795]: Failed password for root from 165.22.88.72 port 49300 ssh2 <co id="FailedPassword-co" linkends="FailedPassword"/></screen>
+ <para>这里面包含了两种类型的破解：</para>
+ <calloutlist>
+    <callout arearefs="InvalidUser-co" id="InvalidUser">
+      <para>暴力破解用户名的日志</para>
+    </callout>
+    <callout arearefs="FailedPassword-co" id="FailedPassword">
+      <para>暴力破解密码的日志</para>
+    </callout>
+  </calloutlist>
+  <para>通常情况下，黑客是利用暴力破解工具来完成这项工作的，暴力破解工具会利用一个字典，根据字典里的用户名来猜测系统中的可能存在的用户。一旦发现系统中存在某个用户，那破解工具会进一步猜测这个用户的密码。</para>
+</sect1> 
