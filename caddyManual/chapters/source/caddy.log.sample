@@ -1,0 +1,39 @@
+{
+	"level": "info",
+	"ts": 1585597114.7687502,
+	"logger": "http.log.access",
+	"msg": "handled request",
+	"request": {
+		"method": "GET",
+		"uri": "/",
+		"proto": "HTTP/2.0",
+		"remote_addr": "127.0.0.1:50876",
+		"host": "example.com",
+		"headers": {
+			"User-Agent": [
+				"curl/7.64.1"
+			],
+			"Accept": [
+				"*/*"
+			]
+		},
+		"tls": {
+			"resumed": false,
+			"version": 771,
+			"ciphersuite": 49196,
+			"proto": "h2",
+			"proto_mutual": true,
+			"server_name": "example.com"
+		}
+	},
+	"user_id": "",
+	"duration": 0.000014711,
+	"size": 2326,
+	"status": 200,
+	"resp_headers": {
+		"Server": [
+			"Caddy"
+		],
+		"Content-Type": ["text/html"]
+	}
+}

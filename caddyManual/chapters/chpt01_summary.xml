@@ -1,0 +1,69 @@
+<chapter><title>关于caddy</title>
+  <sect1><title>简介</title>
+    <para><emphasis>caddy</emphasis>目前是ZeroSSL在维护的一个开源项目。ZeroSSL<footnote><para><link xlink:href="https://zerossl.com/"/></para></footnote>和Let's Encrypt<footnote><para><link xlink:href="https://letsencrypt.org/"/></para></footnote>一样，是一个SSL证书颁发机构。Caddy属于web服务器界的新秀。用go语言开发。与其他的web服务器相比，因为有了ZeroSSL的加持，caddy最大的一个特点就是它自带TLS，能非常方便的部署HTTPS。按照官方步骤安装好了以后无需任何配置，就已经自带了https功能。同时，caddy也非常好地支持成诸如代理、负载均衡等功能。在HTTP/2协议上，caddy表现也非常好。和很多的开源软件一样，caddy的文档也并不是特别的全面，有一些选项和指令需要自己去实验才能明白具体如何使用。</para>
+    <para>caddy的另外一个特点，是可以通过nginx-adapter<footnote><para><link xlink:href="https://github.com/caddyserver/nginx-adapter"/></para></footnote>模块来使用nginx的配置文件。caddy第一个版本发布于2015年4月，截至本文截稿，caddy的最新版本是2.4.5。</para>
+    <para><link xlink:href="https://caddyserver.com/"/></para>
+  </sect1>
+  
+  <sect1><title>安装</title>
+    <para>caddy针对不同的操作系统和平台都有不同的发行包。也有静态的已经编译好的二进制文件,可以直接下载使用。详细的安装请参考这个页面：<link xlink:href="https://caddyserver.com/docs/install"/>。在这里我们仅给出二进制文件和deb的安装方式。</para>
+    <sect2><title>二进制静态包</title>
+      <para>二进制包安装方式并不会将caddy安装为一个服务（service），仅仅是一个可以执行的程序。这种方式更适合开发和调试。直接到caddy的下载站点：<link xlink:href="https://caddyserver.com/download"/>下载适合自己操作系统的压缩包就可以了。如果是Linux系统，将解压缩后的<command>caddy</command>命令复制到<filename>/usr/local/bin</filename>目录下就可以了。例如：</para>
+      <screen>cp caddy_linux_amd64 /usr/local/bin/caddy</screen>
+    </sect2>
+    
+    <sect2><title>deb包方式</title>
+      <para>在Debian、Ubuntu或Raspbian基于debian包的系统可以使用deb包的安装方式。这种方式会将caddy安装为一个<emphasis>systemd service</emphasis>，同时，<command>caddy-api</command>这个服务也会被自动安装。</para>
+      <orderedlist>
+        <listitem><para><emphasis>Stable版本系统</emphasis></para>
+          <screen>$ sudo apt install -y debian-keyring debian-archive-keyring apt-transport-https
+$ curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | \
+      sudo tee /etc/apt/trusted.gpg.d/caddy-stable.asc
+$ curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | \
+      sudo tee /etc/apt/sources.list.d/caddy-stable.list
+$ sudo apt update
+$ sudo apt install caddy</screen>
+        </listitem>
+        
+        <listitem><para><emphasis>Testing版本系统</emphasis></para>
+          <screen>$ sudo apt install -y debian-keyring debian-archive-keyring apt-transport-https
+$ curl -1sLf 'https://dl.cloudsmith.io/public/caddy/testing/gpg.key' | \
+      sudo tee /etc/apt/trusted.gpg.d/caddy-testing.asc
+$ curl -1sLf 'https://dl.cloudsmith.io/public/caddy/testing/debian.deb.txt' | \
+      sudo tee /etc/apt/sources.list.d/caddy-testing.list
+$ sudo apt update
+$ sudo apt install caddy</screen>
+        </listitem>
+      </orderedlist>
+    </sect2>
+    
+  </sect1>
+ <sect1><title>caddy的配置方式</title>
+    <para>作为概览，在本节我们从一些基础的方面展示如何使用caddy。</para>
+    <para>caddy的配置和大多数的web server不太一样。有三种不同的配置方式：</para>
+    <orderedlist>
+      <listitem><emphasis>JSON</emphasis>
+        <para>caddy的原生配置是JSON格式。使用JSON格式来配置caddy可以实现它的全部功能。如果不喜欢JSON的配置方式，也可是使用caddy所具备的“适配器（adapter）”功能来使用其他的配置格式。其中，Caddyfile就是“adapter”的一种。另外，caddy也可以通过使用“nginx adapter”来使用nginx的配置文件。</para>
+      </listitem>
+      <listitem><emphasis>Caddyfile</emphasis>
+        <para>这是一种比较实用和便捷的方式。在这种方式下，使用<filename>Caddyfile</filename>这个文件来配置系统。这个文件的配置语法比较容易阅读，并且也能够胜任大部分的使用场景。它的样子如下：</para>
+        <programlisting linenumbering="numbered" language="common"><?dbfo pgwide="0"?><textobject><textdata  fileref="source/caddyfile.example.txt"/></textobject></programlisting>
+        <para>这个文件可以保存于系统中的任何位置。只需在启动时使用如下命令进行指定就可以了。</para>
+        <screen>caddy adapt --config /path/to/Caddyfile</screen>
+        <para>caddy使用的配置文件是JSON格式的，其他格式的文件，例如Caddyfile，需要使用配置适配器将其转换为JSON格式。caddy利用这种机制可以使用其他类型的配置文件，目前支持8种：Caddyfile、nginx的配置文件、jsonc、josn5、yaml、cue、toml、及hcl</para>
+      </listitem>
+      <listitem><emphasis>caddyAPI</emphasis>
+        <para>caddy可以通过一个管理端点（administration endpoint）来配置，这个管理端点是一套通过HTTP协议使用来使用的REST API。这个“管理端点”可以在配置文件中进行配置。它的默认使用地址是：<uri>localhost:2019</uri></para>
+      </listitem>
+      
+    </orderedlist>
+    <para>上面所说到的，是caddy的三种配置和管理的方式。在后面的章节会陆续进行说明。</para>
+    <para>如果是使用某种包管理方式安装的caddy，那么caddy已经是一个系统服务了，可能已经启动了。在开始这节的内容之前，建议先将caddy停止运行。可以使用<command>caddy stop</command>命令来停止caddy服务。下面，我们通过如下的几个实验来对caddy进行一个大致的了解。</para>
+    
+  </sect1>
+
+    <!-- figure pgwide="0"><title>web服务器</title><graphic fileref="images/wss-share.png" width="380px"/></figure -->
+  
+  
+
+</chapter>

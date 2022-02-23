@@ -1,0 +1,6 @@
+192.168.31.9
+root * /var/www/html
+file_server
+log {
+	output file /var/log/caddy/default.log
+}

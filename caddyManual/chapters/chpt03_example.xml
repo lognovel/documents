@@ -1,0 +1,12 @@
+<chapter><title>配置案例及日志解析</title>
+
+    <para>为了能更清晰地描述，我们在局域网中设立一台nginx服务器，我们称为<emphasis>Server</emphasis>，其内网IP地址是192.168.31.2/24，外网IP地址是192.168.1.2/24。我们在其上安装Debian Linux（V12）。使用如下命令安装nginx：</para>
+    <blockquote><command>apt-get install nginx-full</command></blockquote>
+    <para>安装结束后，nginx的配置文件位于<filename>/etc/nginx</filename>目录下，日志文件默认位于<filename>/var/log/nginx</filename>目录下。</para>
+    <figure pgwide="0"><title>nginx服务器网络拓扑图</title><graphic fileref="images/env.png" width="200px"/></figure>
+    
+
+
+
+
+</chapter>

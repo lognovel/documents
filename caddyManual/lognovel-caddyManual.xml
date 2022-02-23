@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE book 
+[
+    <!ENTITY legalnotice SYSTEM "../sharefiles/legalnotice.xml">
+    <!ENTITY info SYSTEM "info.xml">
+    <!ENTITY preface SYSTEM "../sharefiles/preface.xml">
+    
+
+
+    <!ENTITY chpt01_summary SYSTEM "chapters/chpt01_summary.xml">
+    <!ENTITY chpt02_tutorials SYSTEM "chapters/chpt02_tutorials.xml">
+    <!ENTITY chpt03_example SYSTEM "chapters/chpt03_example.xml">
+    
+    <!ENTITY appdendix01_install SYSTEM "chapters/appendix01_install.xml">
+    <!ENTITY appdendix02_status SYSTEM "chapters/appendix02_status.xml">
+
+]>
+<book xmlns:xlink='http://www.w3.org/1999/xlink'
+      xml:lang="zh_cn">
+
+
+<title>Caddy使用手册</title>
+<subtitle></subtitle>
+&info;
+
+&preface;
+
+&chpt01_summary;
+&chpt02_tutorials;
+
+<!--
+&appdendix01_install;
+&appdendix02_status;
+-->
+
+</book>

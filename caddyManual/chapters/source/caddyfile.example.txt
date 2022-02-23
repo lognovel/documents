@@ -1,0 +1,5 @@
+example.com
+
+root * /var/www/wordpress
+php_fastcgi unix//run/php/php-version-fpm.sock
+file_server

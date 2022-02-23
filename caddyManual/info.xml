@@ -1,0 +1,43 @@
+<info><!-- title>编目信息</title -->
+  <mediaobject><imageobject> <imagedata fileref="images/logo_title.svg"/></imageobject></mediaobject>
+  <corpauthor>http://lognovel.io</corpauthor>
+    
+  <author>
+    <personname>
+      <!-- honorific>Mr</honorific -->
+      <firstname>Li</firstname>
+      <surname>ChunXin</surname>
+    </personname>
+    <affiliation>
+      <shortaffil>ATI</shortaffil>
+      <jobtitle>Senior Application Analyst</jobtitle>
+      <orgname>lognovel, Inc.</orgname>
+      <orgdiv>Application Developement</orgdiv>
+    </affiliation>
+    <email>484299@qq.com</email>
+  </author>
+
+
+  <copyright>
+    <year>2021</year>
+    <holder>LogNovel</holder>
+  </copyright>
+  <pubdate>October 10th,2021 </pubdate>
+  <volumenum>[ docID: lognovel<?dbtimestamp format="Y"?><?dbtimestamp format="m"?><?dbtimestamp format="d"?><?dbtimestamp format="H"?><?dbtimestamp format="M"?><?dbtimestamp format="S"?> ]</volumenum>
+
+  <releaseinfo>Exported by dogen [http://lognovel.com/dogen] , on <?dbtimestamp format="Y-m-d"?> at <?dbtimestamp format="H:M:S"?> . 484299@qq.com</releaseinfo>
+    
+  <revhistory>
+    <revision>
+      <revnumber>0.1</revnumber>
+      <date>2021年11月2日.</date>
+      <authorinitials><email>doc@lognovel.com</email></authorinitials>
+      <revremark>文档建立 </revremark>
+    </revision>
+    
+  </revhistory>    
+
+  &legalnotice;    
+
+
+</info>

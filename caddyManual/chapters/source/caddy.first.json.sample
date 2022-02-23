@@ -1,0 +1,19 @@
+{
+    "apps": {
+        "http": {
+            "servers": {
+                "hello": {
+                    "listen": [":2015"],
+                    "routes": [
+                        {
+                            "handle": [{
+                                "handler": "static_response",
+                                "body": "Hello, world!"
+                            }]
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,299 @@
+<chapter><title>使用入门</title>
+ 
+  <para>为了能更清晰地描述，我们在局域网中设立一台caddy服务器，我们称为<emphasis>Server</emphasis>，其内网IP地址是192.168.31.2/24，外网IP地址是192.168.1.2/24。我们在其上安装Debian Linux（V12）。</para>
+  <figure pgwide="0"><title>caddy服务器网络拓扑图</title><graphic fileref="images/env.png" width="180px"/></figure>
+  <para>同时，我们需要在客户端（客户端使用了Ubuntu桌面系统）和caddy server端安装两个工具：</para>
+  <orderedlist>
+    <listitem><emphasis>curl</emphasis>
+      <para><command>curl</command>，即client-URL，可以认为是一个命令行的浏览器，在Debian/Ubuntu下使用<command>apt-get install curl</command>命令来安装。它的官方站点是<link xlink:href="https://curl.se/"/></para>
+    </listitem>
+    <listitem><emphasis>jq</emphasis>
+      <para><command>jq</command> 是一个基于命令行的、轻量级JSON文件处理工具，caddy的原生配置文件是JSON文件，我们需要用<command>jq</command>命令来将其格式化，以便于阅读。在Debian或Ubuntu下可通过<command>apt-get install jq</command>来安装。关于其更多内容请访问：<link xlink:href="https://stedolan.github.io/jq/"/>。</para>
+    </listitem>
+  </orderedlist>
+  
+  <sect1><title>运行守护进程（Run the daemon）</title>
+    <para>在终端输入<command>caddy</command>命令，会显示help信息。如果想让caddy作为守护进程来运行，有两个子命令可以使用：<command>run</command>和<command>start</command>。在终端中输入<command>caddy run</command>或<command>caddy start</command>即可。<command>run</command>和<command>start</command>的区别是：</para>
+    <orderedlist>
+      <listitem><command>run</command>：开启caddy进程，可以随时使用（Ctrl+C）或关闭终端来结束其运行。</listitem>
+      <listitem><command>start</command>：开启caddy进程，并在后台运行。可以使用<command>caddy sotp</command>来结束其运行。</listitem>
+    </orderedlist>
+    <para>在配置文件为空的情况下，运行<command>caddy run</command>或<command>caddy start</command>之后，系统会开启一个本地的2019端口，这个端口就是caddy的API管理接口。可以通过这个接口对caddy完成很多的操作。</para>
+    <para>下面的内容就是使用<command>caddy start</command>启动系统之后的屏幕内容，通过使用<command>netstat -ptuln</command>命令，可以看到，caddy开启了本地的2019管理端口：</para>
+    <screen>root@lognovel:~# caddy start
+2021/11/08 05:46:38.499	INFO	admin	admin endpoint started	{"address": "tcp/localhost:2019", \
+         "enforce_origin": false, "origins": ["localhost:2019", "[::1]:2019", "127.0.0.1:2019"]}
+2021/11/08 05:46:38.499	INFO	serving initial configuration
+Successfully started Caddy (pid=1850) - Caddy is running in the background
+root@lognovel:~# netstat -ptuln
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address    State       PID/Program name    
+tcp        0      0 127.0.0.1:2019          0.0.0.0:*          LISTEN      1850/caddy          
+... ...</screen>
+    <note>caddy所启动的2019端口L并非我们的web站点，而是“管理端点（administration endpoint）”，也就是caddy的API。在默认情况下，运行在本机的2019端口，并且只允许本机访问。可以使用<command>curl localhost:2019/config/</command>命令来查看系统配置。</note>
+  </sect1>
+
+
+  
+  
+<!-- -->
+  <sect1><title>Caddyfile配置文件</title>
+    <sect2><title>Hello World! ( Caddyfile )</title>
+        <para>在caddy的配置方式中，Caddyfile文件对人来说是比较容易阅读的。我们编辑一个文件，名为<filename>Caddyfile</filename>（没有扩展名，C字母大写，其他字母小写！）。在<filename>Caddyfile</filename>中加入如下内容：</para>
+        <screen>:2015
+respond "Hello, world!"</screen>
+        <para>现在停止caddy的运行，使用（Ctrl+C），如果是运行在守护进程状态下的话可以使用<command>caddy stop</command>命令。然后，使用如下的命令再次运行caddy</para>
+        <screen>caddy run</screen>
+        
+        <para>这个命令会在当前目录下寻找<filename>Caddyfile</filename>文件，并直接加载它。如果<filename>Caddyfile</filename>这个文件保存在其他位置，那需要指明具体的路径：</para>
+        <screen>caddy run --config /path/to/Caddyfile</screen>
+        <para>实际上，上面的命令是下面一行命令的缩写，省掉了<option>--adapter caddyfile</option>，因为默认情况下caddy使用Caddyfile adapter，</para>
+        <screen>caddy run --adapter caddyfile --config /path/to/Caddyfile</screen>
+        <para>接下来，在另外一个终端中输入：<command>curl https://localhost</command>，就会看到”Hello World!“。</para>
+
+    </sect2>
+    
+    <sect2><title>配置多站点 ( Caddyfile &amp; API )</title>
+      <para>现在我们更改<filename>Caddyfile</filename>，在其中定义两个站点，内容如下：</para>
+      <screen>localhost {
+	respond "Hello, world!"
+}
+
+localhost:2016 {
+	respond "Goodbye, world!"
+}</screen>
+      <para>我们使用API的方式将这些内容加载到系统中，使用如下的命令：</para>
+      <screen>curl localhost:2019/load \
+	-X POST \
+	-H "Content-Type: text/caddyfile" \
+	--data-binary @Caddyfile</screen>
+      <para>然后使用<command>curl https://localhost:2016</command>命令，便会看到“Goodbye, world!”</para>       
+    </sect2>
+
+  </sect1>
+<!-- -->  
+  
+  <sect1><title>尝试使用caddyAPI &amp; JSON</title>
+    
+    <sect2><title>Hello World! ( Heredoc )</title>
+      <para>使用<command>caddy run</command>或<command>caddy start</command>启动caddy，不要带任何配置文件。现在caddy已经在“空转”了，我们使用Heredoc<footnote><para>Heredoc：向交互式命令传递多行文本或代码的一种方式，第一行是以可选命令开始，紧接着是重定向符号 &lt;&lt;, 你可以使用任何字符串作为分隔符，我们最常用的是 EOF(End Of File) 或者 END</para></footnote>的方式，通过API接口给它加载一些配置：</para>
+      <screen><textobject><textdata  fileref="source/caddy.first.heredoc.sample"/></textobject></screen>
+      <para>把这个配置加载到caddy以后，我们在客户端使用浏览器访问caddy服务器的2015端口，<userinput>http://192.168.31.2:2015</userinput>，或者也可以使用命令：<command>curl http://192.168.31.2:2015</command>。我们会看到“Hello, world!”</para>
+    </sect2>
+    
+    <sect2><title>Hello World! ( JSON )</title>
+        <para>用Heredoc字符流的方式加载配置还是有点费劲的，前面的例子只是让我们知道caddy的这种工作方式。更常用的方式还是把配置写在一个文件中，然后再加载。</para>
+        <para>接下来我们把前面的配置内容写入到一个简单的JSON配置文件中，然后同样使用<command>curl</command>命令完成加载。文件名称为<filename>caddy.json</filename>，其内容如下：</para>
+        <programlisting linenumbering="numbered" language="common"><?dbfo pgwide="0"?><textobject><textdata  fileref="source/caddy.first.json.sample"/></textobject></programlisting>
+        <para>现在使用如下的命令加载这个配置文件：</para>
+        <screen>curl localhost:2019/load \
+	-X POST \
+	-H "Content-Type: application/json" \
+	-d @caddy.json</screen>
+	<para>同样，我们可以在客户端通过浏览器或<command>curl</command>来访问一下2015端口：</para>
+        <screen>curl http//192.168.31.2:2015</screen>
+        <para>如果能看到Hello,world!那就代表刚才的配置文件已经生效了。</para>  
+	<tip>实际上caddyAPI在大多数情况下，是为其他程序所设计的一种接口。</tip> 
+    </sect2>
+    
+    <sect2><title>配置多站点 ( JSON &amp; API)</title>
+        <para>接下来我们更新一下<filename>caddy.json</filename>文件，定义两个站点，一个在2015端口，一个在2016端口：</para>
+        <programlisting linenumbering="numbered" language="common"><?dbfo pgwide="0"?><textobject><textdata  fileref="source/caddy.2sites.json.sample"/></textobject></programlisting>
+        <para>然后再次使用如下的命令来加载这个文件：</para>
+        <screen>curl localhost:2019/load \
+	-X POST \
+	-H "Content-Type: application/json" \
+	-d @caddy.json</screen>
+	<para>然后在客户端分别访问：<userinput>http://192.168.31.2:2015</userinput>和<userinput>http://192.168.31.2:2016</userinput>，会看到“Hello, world!”及“Goodbye, world!”。</para>
+	<tip><filename>caddy.json</filename>这个文件也可以通过命令行来使用：<command>caddy start --config caddy.json</command></tip>
+    </sect2>
+    
+<!-- -->
+
+
+<!-- -->    
+    <para>使用API可以做很多的事情，包括导出配置和对配置进行细粒度的更改（而不是更新整个内容）。建议阅读更完整的API教程：<link xlink:href="https://caddyserver.com/docs/api-tutorial"/>及<link xlink:href="https://caddyserver.com/docs/api"/></para>
+    
+  </sect1>
+  <sect1><title>配置测试和adapter</title>
+    <sect2><title>对配置进行测试（Test config）</title>
+        <para>在caddy启动以后，我们随时都可以在caddy server上使用<command>curl</command>命令通过GET请求来查看配置：</para>
+        <screen>curl localhost:2019/config/</screen>
+        <para>这个命令直至输出的结果是JSON格式的，非常不易读，可以使用<command>jq</command>命令来将其格式化：</para>
+        <screen>curl localhost:2019/config/ | jq</screen>
+        <para>可以看出，输出的结果和我们的配置是一致的。可以使用这个命令将当前的配置导出。</para>
+    </sect2>
+    <sect2><title>adapter</title>
+            <para>我们会看到一个JSON输出，caddy使用caddyfile adapter（config adapter），将<filename>Caddyfile</filename>转换为JSON（Caddy's native JSON structure）格式。</para>
+            <para>在使用<command>caddy run</command>或<command>caddy start</command>启动caddy以后，可以在另外一个终端中运行下面的命令：</para>
+    <screen>curl localhost:2019/config/</screen>
+    <para>通过这个命令，可以查看当前的配置。</para>
+    
+    
+  </sect2>
+    
+  </sect1>
+
+
+  <sect1><title>JSON vs. Caddyfile</title>
+        <para>现在我们已经知道Caddyfile会被转换为JSON格式。实际上Caddyfile的配置方式对人来说更友好、更简单一些。具体是使用JSON还是Caddyfile，要取决于具体的场景。caddy的官方网站有一张表格，可以供参考：</para>
+        <table frame="all"><title>JSON vs. Caddyfile</title>
+          <tgroup cols="2" align="center">
+          <colspec colnum="1" colname="c1" colwidth="1*"/>
+          <colspec colnum="2" colname="c2" colwidth="1*"/>
+          <thead>
+            <row><?dbfo bgcolor="#EEEEEE" ?>
+              <entry align="center">JSON</entry>
+              <entry align="center">Caddyfile</entry>
+            </row>
+          </thead>
+          <tbody>
+            <row>
+              <entry>Full range of Caddy functionality</entry>
+              <entry>Most common parts of Caddy functionality</entry>
+            </row>
+            <row>
+              <entry>Easy to generate</entry>
+              <entry>Easy to craft by hand</entry>
+            </row>
+            <row>
+              <entry>Easily programmable</entry>
+              <entry>Difficult to automate</entry>
+            </row>
+            <row>
+              <entry>Extremely expressive</entry>
+              <entry>Moderately expressive</entry>
+            </row>
+            <row>
+              <entry>Allows config traversal</entry>
+              <entry>Cannot traverse within Caddyfile</entry>
+            </row>
+            <row>
+              <entry>Partial config changes</entry>
+              <entry>Whole config changes only</entry>
+            </row>
+            <row>
+              <entry>Can be exported</entry>
+              <entry>Cannot be exported</entry>
+            </row>
+            <row>
+              <entry>Compatible with all API endpoints</entry>
+              <entry>Compatible with some API endpoints</entry>
+            </row>
+            <row>
+              <entry>Documentation generated automatically</entry>
+              <entry>Documentation is hand-written</entry>
+            </row>
+            <row>
+              <entry>Ubiquitous</entry>
+              <entry>Niche</entry>
+            </row>
+            <row>
+              <entry>More efficient</entry>
+              <entry>More computational</entry>
+            </row>
+            <row>
+              <entry>Kind of boring</entry>
+              <entry>Kind of fun</entry>
+            </row>             
+          </tbody>
+          </tgroup>
+        </table>  
+        <para>其实，从上面的表格可以看出，如果比较精通JSON配置的话，似乎使用JSON还是更好的。</para>
+  </sect1>
+  <sect1><title>API vs. Config files</title>
+        <para>另外一点，就是在caddy配置管理中是使用API还是使用它的Caddyfile。其实可以同时使用，但他们官方并不推荐，他们推荐最好只使用一种。一种比较常见的组合是：JSON+API 或者 Caddyfile+CLI 。下面的表格可以让我们理解API和Caddyfile的一些区别：</para>
+        <table frame="all"><title>API vs. config files</title>
+          <tgroup cols="2" align="center">
+          <colspec colnum="1" colname="c1" colwidth="1*"/>
+          <colspec colnum="2" colname="c2" colwidth="1*"/>
+          <thead>
+            <row><?dbfo bgcolor="#EEEEEE" ?>
+              <entry align="center">JSON</entry>
+              <entry align="center">Caddyfile</entry>
+            </row>
+          </thead>
+          <tbody>
+            <row>
+              <entry>Make config changes with HTTP requests</entry>
+              <entry>Make config changes with shell commands</entry>
+            </row>
+            <row>
+              <entry>Easy to scale</entry>
+              <entry>Difficult to scale</entry>
+            </row>
+            <row>
+              <entry>Difficult to manage by hand</entry>
+              <entry>Easy to manage by hand</entry>
+            </row>
+            <row>
+              <entry>Really fun</entry>
+              <entry>Also fun</entry>
+            </row>
+                      
+          </tbody>
+          </tgroup>
+        </table>  
+  </sect1>
+  
+<!-- --> 
+  <sect1><title>静态文件服务器</title>
+    <para>启用静态的文件服务器(file server)有两种简单的方式：一种是通过命令行，一种是通过Caddyfile。</para>
+    <sect2><title>command line</title>
+      <para>使用命令启动文件服务器，可以在终端中切换到站点所在的目录，例如：<filename>/var/www/html</filename>，然后在这个目录下执行：<command>caddy file-server</command>，这样一个基本的静态文件服务器就在80端口开始运行了。如果在<filename>/var/www/html</filename>目录下有个<filename>index.html</filename>文件的话，在客户端的浏览器中输入：<userinput>http://192.168.31.2/</userinput>就可以直接看到这个文件了。</para>
+      <para>如果想要caddy运行在其他的端口，可以使用<command>caddy file-server --listen :2015</command>这个命令。</para>
+      <para>如果目录中没有<filename>index.html</filename>文件，并且想能够列出<filename>/var/www/html</filename>中的文件，可以使用<command>caddy file-server --browse</command>这个命令。</para>
+      <para>如果想要使用指定的目录作为根目录，可以使用<command>caddy file-server --root /path/to/yourSite</command>这个命令。</para>
+    </sect2>
+    <sect2><title>Caddyfile</title>
+      <para>使用Caddyfile配置文件的方式实现文件服务器也非常简单，如果只是简单的启动它，下面的两行配置就够了：</para>
+      <screen>localhost
+file_server</screen>
+      <para>如果想要变换端口，只需要将<parameter>localhost</parameter>更改为<parameter>localhost:2015</parameter>就可以了。</para>
+      <para>如果想要目录下的文件可列表浏览，可以将<parameter>file_server</parameter>替换为<parameter>file_server browse</parameter></para>
+      <para>如果想要从客户端的浏览器中可以访问，我们需要下面的配置：</para>
+      <screen>192.168.31.2
+root * /var/www/
+file_server browse</screen>
+    </sect2>
+  </sect1>
+  <sect1><title>反向代理</title>
+    <para>为了说明反向代理，我们需要在Server1上安装一个web服务器。ip地址设置为192.168.31.10/24。</para>
+    <sect2><title>command line</title>
+      <para>使用如下的命令：</para>
+      <screen>caddy reverse-proxy --from :2016 --to 192.168.31.10:80</screen>
+      <para>当我们在客户端的浏览器中输入<userinput>http://192.168.31.2:2016</userinput>时，就会看到Server1站点的内容。</para>
+    </sect2>
+    <sect2><title>Caddyfile</title>
+      <para>更改<filename>Caddyfile</filename>的内容，如下：</para>
+      <screen>:2016
+
+reverse_proxy 192.168.31.10:9000</screen>
+      <para>然后使用<command>caddy run</command>命令来启动caddy，再次在客户端的浏览器中输入<userinput>http://192.168.31.2:2016</userinput>时，就会看到Server1站点的内容。</para>
+
+    </sect2>
+  </sect1>
+  <sect1><title>HTTPS</title>
+    <para>HTTPS对于caddy来说是一件非常容易的事情，当caddy安装好以后默认就带HTTPS了，只要有一个域名，就可以启用HTTPS了。我们使用lognovel.com这个域名来说明如何配置HTTPS。</para>
+    <sect2><title>Caddyfile</title>
+      <para>建立一个根目录<filename>/usr/local/work/lognovel.com</filename>，在这个目录里建立一个<filename>index.html</filename>文件，<filename>Caddyfile</filename>配置如下：</para>
+      <screen>lognovel.com www.lognovel.com {
+	root * /usr/local/work/lognovel.com
+	file_server
+}
+</screen>
+      <para>在浏览器中输入<userinput>http://lognovel.com</userinput>或<userinput>http://www.lognovel.com</userinput>，会看到<filename>index.html</filename>里的内容。我们可以通过浏览器地址栏左的小锁icon来查看https证书的情况。</para>
+      <figure pgwide="0"><title>caddy https</title><graphic fileref="images/https.png" width="200px"/></figure>
+    </sect2>
+    
+    <sect2><title>使用命令</title>
+      <para>使用下面的命令也可以达到上面配置文件相同的效果：</para>
+      <screen>caddy file-server --domain lognovel.com --root /usr/local/work/lognovel.com</screen>
+
+    </sect2>
+  </sect1> 
+ 
+  
+
+
+</chapter>

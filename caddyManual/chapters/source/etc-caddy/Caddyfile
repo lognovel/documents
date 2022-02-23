@@ -1,0 +1,22 @@
+# this file created by chunxin 
+192.168.31.9 {
+root * /usr/local/work/example.com
+file_server
+log {
+      output file /var/log/caddy/access.log
+    }
+}
+
+#192.168.31.9
+#root * /var/www/
+#file_server browse
+
+#:2016
+#reverse_proxy 192.168.31.36:80 192.168.31.66:80
+#{
+#	lb_policy round_robin
+#}
+#log {
+#	output file /var/log/caddy/proxy.log
+#}
+ 
