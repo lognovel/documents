@@ -1,0 +1,11 @@
+	// level format
+	var levelFormatter zapcore.LevelEncoder
+	switch lec.LevelFormat {
+	case "", "lower":
+		levelFormatter = zapcore.LowercaseLevelEncoder
+	case "upper":
+		levelFormatter = zapcore.CapitalLevelEncoder
+	case "color":
+		levelFormatter = zapcore.CapitalColorLevelEncoder
+	}
+	cfg.EncodeLevel = levelFormatter

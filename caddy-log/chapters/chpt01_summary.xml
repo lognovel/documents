@@ -1,0 +1,73 @@
+<chapter><title>关于caddy</title>
+
+  <sect1><title>caddy概述</title>
+    <para><emphasis>caddy</emphasis>目前是ZeroSSL在维护的一个开源项目。ZeroSSL<footnote><para><link xlink:href="https://zerossl.com/"/></para></footnote>和Let's Encrypt<footnote><para><link xlink:href="https://letsencrypt.org/"/></para></footnote>一样，是一个SSL证书颁发机构。Caddy属于web服务器界的新秀。用go语言开发。与其他的web服务器相比，因为有了ZeroSSL的加持，caddy最大的一个特点就是它自带TLS，能非常方便的部署HTTPS。按照官方步骤安装好了以后无需任何配置，就已经自带了https功能。同时，caddy也非常好地支持诸如代理、负载均衡等功能。在HTTP/2协议上，caddy表现也非常好。和很多的开源软件一样，caddy的文档也并不是特别的全面，有一些选项和指令需要自己去实验才能明白具体如何使用。</para>
+    <para>caddy的另外一个特点，是可以通过nginx-adapter<footnote><para><link xlink:href="https://github.com/caddyserver/nginx-adapter"/></para></footnote>模块来使用nginx的配置文件。caddy第一个版本发布于2015年4月，截至本文完稿，caddy的最新版本是2.4.5。</para>
+    <para>关于caddy更多的内容可以参考它的官方网站：<link xlink:href="https://caddyserver.com/"/>。</para>
+
+    <!-- figure pgwide="0"><title>web服务器</title><graphic fileref="images/wss-share.png" width="380px"/></figure -->
+  </sect1>
+  
+  
+  <sect1><title>caddy日志概览</title>  
+    <para>caddy的日志在设计上与httpd及nginx等前辈有一些不太一样的地方，httpd和nginx默认情况下使用了<emphasis>Common Log Format(CLF)</emphasis>和<emphasis>Combined Log Format(Combined)</emphasis>日志格式。而caddy使用了json文件格式来记录日志，而且字段也要多出很多。caddy的日志设计带有了许多“大数据”方面的理念：</para>
+    <orderedlist>
+      <listitem>日志数据及日志条目中的字段越多越好</listitem>
+      <listitem>对日志进行过滤清洗后保存比直接丢弃好</listitem>
+      <listitem>合适的编码格式以提高日志数据的灵活性和交互能力</listitem>
+    </orderedlist>
+    
+    <para>在caddy的官网有一篇小文章，简单介绍了其日志系统的理念：<link xlink:href="https://caddyserver.com/docs/logging"/>，包括caddy在日志系统中的角色、caddy日志的结构、处理流程及日志的使用等。</para>
+    <sect2><title>caddy在日志系统中的角色</title>
+      <para>通常情况下，在日志系统包含两方面主要的内容：emission（产生日志）和 consumption（使用）</para>
+      <orderedlist>
+        <listitem><emphasis>Emission</emphasis>：意味着产生日志信息，它通常包含三个步骤：
+          <orderedlist>
+            <listitem>收集相关的信息；</listitem>
+            <listitem>按照一定的格式对信息进行封装；</listitem>
+            <listitem>将封装好的信息发送到适当的地方。</listitem>
+          </orderedlist>
+          <para>这三个部分的功能已经包含在caddy的核心代码中，任何的模块和插件都可以调用这部分功能。</para>
+        </listitem>
+        <listitem><emphasis>consumption</emphasis>：日志的使用和处理。没有被使用的日志是没有任何价值的。只有正确的使用日志，才能使其产生应有的价值。
+        </listitem>
+      </orderedlist>
+      <para>在这两个概念里，caddy属于前者，是一个日志生产者。</para>
+    </sect2>
+    
+    
+    <sect2><title>caddy结构化的日志</title>
+       <para>caddy采用了更为结构化的日志系统，JSON格式的日志是caddy比较建议使用的格式。如果不想使用JSON格式，也可以在配置文件中使用<command>encoder</command>指令来指定其他的格式。如下的内容是caddy官方网站所展示的一段JSON格式的日志内容：</para>
+       <programlisting linenumbering="numbered" language="common"><?dbfo pgwide="0"?><textobject><textdata  fileref="../source/caddy.log.sample"/></textobject></programlisting>
+    </sect2>
+    
+    <sect2><title>处理流程</title>
+      <para>caddy中处理log的程序称为<emphasis>logger</emphasis>，日志信息被<emphasis>logger</emphasis>收集并发送到<emphasis>log</emphasis>进行处理，caddy允许配置多个<emphasis>log</emphasis>s。一个<emphasis>log</emphasis>包含如下几个部分：</para>
+      <orderedlist>
+        <listitem><emphasis>encoder</emphasis>
+          <para>日志采用的编码格式，包括<option>console</option>、<option>json</option>、<option>filter</option>及<option>single_field</option>等。</para>
+        </listitem>
+        <listitem><emphasis>writer</emphasis>
+          <para>配置日志输出的地方。可以是一个文件也可以是一个网络地址。</para>
+        </listitem>
+        <listitem><emphasis>level</emphasis>
+          <para>日志的级别，从DEBUG到FATAL，默认是INFO。</para>
+        </listitem>
+        <listitem><emphasis>sampling</emphasis>
+          <para>日志采样的频率。</para>
+        </listitem>
+        <listitem><emphasis>include/exclude</emphasis>
+          <para>每一条信息都是被一个<emphasis>logger</emphasis>所发出，这个<emphasis>logger</emphasis>有一个名字，通常是信息所在模块的名称，使用<option>include/exclude</option>机制，在记录日志时可以包含或排除某些指定的模块。</para>
+        </listitem>
+      </orderedlist>
+    </sect2>
+    
+    
+    <!-- sect2><title>日志的使用</title>
+    </sect2 -->
+    
+    
+   
+  </sect1>
+  
+</chapter>

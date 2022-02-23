@@ -1,0 +1,316 @@
+<appendix><title>HTTP/1.1状态码</title>
+  <para>响应状态，也就是nginx的<parameter>$status</parameter>变量。关于响应状态，最著名的就是“404”,代表Not Found，用于说明服务器无法找到所请求的URL。</para>
+  <para>关于状态码更详细的信息可以参考<emphasis>HTTP/1.1</emphasis>协议的详细说明：<link xlink:href="https://www.rfc-editor.org/rfc/inline-errata/rfc2616.html"></link></para>
+  <para>在这里我们仅做简要说明。HTTP状态码被分成了五大类。由以1、2、3、4、5开头的三个数字组成。</para>
+  
+  <orderedlist>
+    <listitem><para><emphasis>1xx</emphasis>状态码</para>
+      <para>1字头状态码是信息性状态码，HTTP/1.1向协议中引入了信息性状态码。这些状态码相对较新，关于其复杂性和其价值存在一些争论。</para>
+      <table frame="all"><title>1字头状态码</title>
+        <tgroup cols="3" align="left">
+        <colspec colnum="1" colname="c1" colwidth="2*"/>
+        <colspec colnum="2" colname="c2" colwidth="4*"/>
+        <colspec colnum="3" colname="c3" colwidth="8*"/>    
+        <thead>
+          <row><?dbfo bgcolor="#EEEEEE" ?>
+            <entry align="center">状态码</entry>
+            <entry align="center">原因短语</entry>
+            <entry align="center">描述</entry>
+          </row>
+        </thead>
+        <tbody>
+          <row>
+            <entry>100</entry>
+            <entry>Continue</entry>
+            <entry>说明收到了请求的初始部分，请客户端继续。发送了这个状态码之后，服务器在收到请求之后必须进行响应。</entry>
+          </row>
+          <row>
+            <entry>101</entry>
+            <entry>SwitchingProtocols</entry>
+            <entry>说明服务器正在根据客户端的指定，将协议切换成Update</entry>
+          </row>
+        </tbody>
+        </tgroup>
+      </table>
+    </listitem>
+    
+    <listitem><para><emphasis>2xx</emphasis>状态码</para>
+      <para>2字头状态码是成功状态码，客户端发起请求时，这些请求通常都是成功的。</para>
+      <table frame="all"><title>2字头状态码</title>
+        <tgroup cols="3" align="left">
+        <colspec colnum="1" colname="c1" colwidth="2*"/>
+        <colspec colnum="2" colname="c2" colwidth="4*"/>
+        <colspec colnum="3" colname="c3" colwidth="8*"/>    
+        <thead>
+          <row><?dbfo bgcolor="#EEEEEE" ?>
+            <entry align="center">状态码</entry>
+            <entry align="center">原因短语</entry>
+            <entry align="center">描述</entry>
+          </row>
+        </thead>
+        <tbody>
+          <row>
+            <entry>200</entry>
+            <entry>OK</entry>
+            <entry>请求没问题，实体的主体部分包含了所请求的资源。</entry>
+          </row>
+          <row>
+            <entry>201</entry>
+            <entry>Created</entry>
+            <entry>用于创建服务器对象的请求(比如， PUT)。响应的实体主体部分中应该包含各引用了已创建的资源的URL。</entry>
+          </row>
+          <row>
+            <entry>202</entry>
+            <entry>Accepted</entry>
+            <entry>请求已被接受，但服务器还未对其执行任何动作。不能保证服务器会完成这个请求。</entry>
+          </row>
+          <row>
+            <entry>203</entry>
+            <entry>Non- Authoritative  Information</entry>
+            <entry>实体首部包含的信息不是来自于源端服务器，而是可能调用了其他的资源。</entry>
+          </row>
+          <row>
+            <entry>204</entry>
+            <entry>No Content</entry>
+            <entry>响应报文中包含若干首部和一个状态行，但没有实体的主体部分。</entry>
+          </row>
+          <row>
+            <entry>205</entry>
+            <entry>Reset Content</entry>
+            <entry>另一个主要用于浏览器的代码。负责告知浏览器清除当前页面中的所有HTML表单元素。</entry>
+          </row>
+          <row>
+            <entry>206</entry>
+            <entry>Partial Content</entry>
+            <entry>成功执行了一个部分或Range (范围)请求。</entry>
+          </row>
+        </tbody>
+        </tgroup>
+      </table>
+    </listitem>
+    <listitem><para><emphasis>3xx</emphasis>状态码</para>
+      <para>3字头状态码是重定向状态码。重定向状态码要么告知客户端使用替代位置来访问他们所感兴趣的资源，要么就提供一个替代的响应而不是资源的内容。如果资源已被移动，可发送一个重定向状态码和一个可选的Location首部来告知客户端资源已被移走，以及现在可以在哪里找到它。这样，浏览器就可以在不打扰使用者的情况下，透明地转入新的位置了。</para>
+      <table frame="all"><title>3字头状态码</title>
+        <tgroup cols="3" align="left">
+        <colspec colnum="1" colname="c1" colwidth="2*"/>
+        <colspec colnum="2" colname="c2" colwidth="4*"/>
+        <colspec colnum="3" colname="c3" colwidth="8*"/>    
+        <thead>
+          <row><?dbfo bgcolor="#EEEEEE" ?>
+            <entry align="center">状态码</entry>
+            <entry align="center">原因短语</entry>
+            <entry align="center">描述</entry>
+          </row>
+        </thead>
+        <tbody>
+          <row>
+            <entry>300</entry>
+            <entry>Multiple Choices</entry>
+            <entry>客户端请求一个实际指向多个资源的URL时会返回这个状态码，比如服务器上有某个HTML文档的中文和英文版本。返回这个代码时会带有一个选项列表，这样用户就可以选择他希望使用的那一项了。</entry>
+          </row>
+          <row>
+            <entry>301</entry>
+            <entry>Moved Permanently</entry>
+            <entry>在请求的 URL已被移除时使用。</entry>
+          </row>
+          <row>
+            <entry>302</entry>
+            <entry>Found</entry>
+            <entry>与301状态码类似;但是，客户端应该使用Location首部给出的URL来临时定位资源。</entry>
+          </row>
+          <row>
+            <entry>303</entry>
+            <entry>See Other</entry>
+            <entry>告知客户端应该用另一个URL来获取资源。新的URL位于响应报文的Location首部。其主要目的是允许POST请求的响应将客户端定向到某个资源上去</entry>
+          </row>
+          <row>
+            <entry>304</entry>
+            <entry>Not Modified</entry>
+            <entry>客户端可以通过所包含的请求首部，使其请求变成有条件的。如果客户端发起了一个条件GET请求，而最近资源未被修改的话，就可以用这个状态码来说明资源未被修改。带有这个状态码的响应不应该包含实体的主体部分</entry>
+          </row>
+          <row>
+            <entry>305</entry>
+            <entry>Use Proxy</entry>
+            <entry>用来说明必须通过一个代理来访问资源;代理的位置由Location首部给出。</entry>
+          </row>
+          <row>
+            <entry>306</entry>
+            <entry>null</entry>
+            <entry>这个状态码目前还未使用。</entry>
+          </row>
+          <row>
+            <entry>307</entry>
+            <entry>Temporary Redirect</entry>
+            <entry>与301状态码类似;但客户端应该使用Location首部给出的URL来临时定位资源。</entry>
+          </row>
+        </tbody>
+        </tgroup>
+      </table>
+    </listitem>
+    
+    <listitem><para><emphasis>4xx</emphasis>状态码</para>
+      <para>4字头状态码是客户端错误状态码，有时客户端会发送一些服务器无法处理的东西，比如格式错误的请求报文，或者最常见的是，请求一个不存在的URL。</para>
+      <table frame="all"><title>4字头状态码</title>
+        <tgroup cols="3" align="left">
+        <colspec colnum="1" colname="c1" colwidth="2*"/>
+        <colspec colnum="2" colname="c2" colwidth="4*"/>
+        <colspec colnum="3" colname="c3" colwidth="8*"/>    
+        <thead>
+          <row><?dbfo bgcolor="#EEEEEE" ?>
+            <entry align="center">状态码</entry>
+            <entry align="center">原因短语</entry>
+            <entry align="center">描述</entry>
+          </row>
+        </thead>
+        <tbody>
+          <row>
+            <entry>400</entry>
+            <entry>Bad Request</entry>
+            <entry>用于告知客户端它发送了一个错误的请求</entry>
+          </row>
+          <row>
+            <entry>401</entry>
+            <entry>Unauthorized</entry>
+            <entry>与适当的首部一同返回，在这些首部中请求客户端在获取对资源的访问权之前，对自己进行认证。</entry>
+          </row>
+          <row>
+            <entry>402</entry>
+            <entry>Payment Required</entry>
+            <entry>现在这个状态码还未使用，但已经被保留，以作未来之用。</entry>
+          </row>
+          <row>
+            <entry>403</entry>
+            <entry>Forbidden</entry>
+            <entry>用于说明请求被服务器拒绝了。如果服务器想说明为什么拒绝请求，可以包含实体的主体部分来对原因进行描述。但这个状态码通常是在服务器不想说明拒绝原因的时候使用。</entry>
+          </row>
+          <row>
+            <entry>404</entry>
+            <entry>Not Found</entry>
+            <entry>用于说明服务器无法找到所请求的URL。</entry>
+          </row>
+          <row>
+            <entry>405</entry>
+            <entry>Method Not Allowed</entry>
+            <entry>发起的请求中带有所请求的URL不支持的方法时，使用此状态码。</entry>
+          </row>
+          <row>
+            <entry>406</entry>
+            <entry>Not Acceptable</entry>
+            <entry>客户端可以指定参数来说明它们愿意接收什么类型的实体。服务器没有与客户端可接受的URL相匹配的资源时，使用此代码。</entry>
+          </row>
+          <row>
+            <entry>407</entry>
+            <entry>Proxy Authentication</entry>
+            <entry>与401状态码类似，但用于要求对资源进行认证的代理服务器。</entry>
+          </row>
+          <row>
+            <entry>408</entry>
+            <entry>Request Timeout</entry>
+            <entry>如果客户端完成请求所花的时间太长，服务器可以回送此状态码，并关闭连接。超时时长随服务器的不同有所不同。</entry>
+          </row>
+          <row>
+            <entry>409</entry>
+            <entry>Conflict</entry>
+            <entry>用于说明请求可能在资源上引发的一些冲突。服务器担心请求会引发冲突时，可以发送此状态码。</entry>
+          </row>
+          <row>
+            <entry>410</entry>
+            <entry>Gone</entry>
+            <entry>与404类似，只是服务器曾经拥有过此资源。主要用于Web站点的维护，这样服务器的管理者就可以在资源被移除的情况下通知客户端。</entry>
+          </row>
+          <row>
+            <entry>411</entry>
+            <entry>Length Required</entry>
+            <entry>服务器要求在请求报文中包含Content-Length首部时使用。</entry>
+          </row>
+          <row>
+            <entry>412</entry>
+            <entry>Precondition Failed</entry>
+            <entry>客户端发起了条件请求，且其中一个条件失败了的时候使用。</entry>
+          </row>
+          <row>
+            <entry>413</entry>
+            <entry>RequestEntity TooLarge</entry>
+            <entry>客户端发送的实体主体部分比服务器能够或者希望处理的要大时，使用此状态码。</entry>
+          </row>
+          <row>
+            <entry>414</entry>
+            <entry>Request URI Too Long</entry>
+            <entry>客户端所发请求中的请求URL比服务器能够或者希望处理的要长时，使用此状态码。</entry>
+          </row>
+          <row>
+            <entry>415</entry>
+            <entry>Unsupported Media Type</entry>
+            <entry>服务器无法理解或无法支持客户端所发实体的内容类型时，使用此状态码。</entry>
+          </row>
+          <row>
+            <entry>416</entry>
+            <entry>Requested Range Not</entry>
+            <entry>请求报文所请求的是指定资源的某个范围，而此范围无效或无法满Satisfiable足时，使用此状态码。</entry>
+          </row>
+          <row>
+            <entry>417</entry>
+            <entry>Expectation Failed</entry>
+            <entry>请求的Expect请求首部包含了一个期望，但服务器无法满足此期望时，使用此状态码。</entry>
+          </row>        
+        </tbody>
+        </tgroup>
+      </table>
+    </listitem>
+    
+    <listitem><para><emphasis>5xx</emphasis>状态码</para>
+      <para>5字头状态码是服务器错误状态码，有时客户端发送了一条有效请求，服务器自身却出错了。</para>
+      <table frame="all"><title>5字头状态码</title>
+        <tgroup cols="3" align="left">
+        <colspec colnum="1" colname="c1" colwidth="2*"/>
+        <colspec colnum="2" colname="c2" colwidth="4*"/>
+        <colspec colnum="3" colname="c3" colwidth="8*"/>    
+        <thead>
+          <row><?dbfo bgcolor="#EEEEEE" ?>
+            <entry align="center">状态码</entry>
+            <entry align="center">原因短语</entry>
+            <entry align="center">描述</entry>
+          </row>
+        </thead>
+        <tbody>
+          <row>
+            <entry>500</entry>
+            <entry>Internal Server Error</entry>
+            <entry>服务器遇到一个妨碍它为请求提供服务的错误时，使用此状态码。</entry>
+          </row>
+          <row>
+            <entry>501</entry>
+            <entry>Not Implemented</entry>
+            <entry>客户端发起的请求超出服务器的能力范围(比如，使用了服务器不支持的请求方法)时，使用此状态码。</entry>
+          </row>
+          <row>
+            <entry>502</entry>
+            <entry>Bad Gateway</entry>
+            <entry>作为代理或网关使用的服务器从请求响应链的下一条链路上收到了一条伪响应(比如，它无法连接到其父网关)时，使用此状态码。</entry>
+          </row>
+          <row>
+            <entry>503</entry>
+            <entry>Service Unavailable</entry>
+            <entry>用来说明服务器现在无法为请求提供服务。</entry>
+          </row>
+          <row>
+            <entry>504</entry>
+            <entry>Gateway Timeout</entry>
+            <entry>与状态码408类似，只是这里的响应来自一个网关或代理，它们在等待另一服务器对其请求进行响应时超时了。</entry>
+          </row>
+          <row>
+            <entry>505</entry>
+            <entry>HTTP Version Not</entry>
+            <entry>服务器收到的请求使用了它无法或不愿支持的协议版本时，使用此状态码。</entry>
+          </row>
+        </tbody>
+        </tgroup>
+      </table>
+    </listitem>
+  </orderedlist>
+  
+  
+
+
+
+</appendix>

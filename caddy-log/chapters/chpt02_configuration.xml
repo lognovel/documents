@@ -1,0 +1,233 @@
+<chapter><title>配置(Caddyfile中日志的配置)</title>
+    <para>caddy有三种配置方式：<filename>Caddyfile</filename>、json和API的方式。<filename>Caddyfile</filename>对人来说是比较容易阅读和容易使用的一种，这个章节介绍如何在<filename>Caddyfile</filename>中配置caddy的日志。</para>
+ 
+    <sect1><title>语法（syntax）</title>
+      <programlisting linenumbering="numbered" language="common">log {
+	output <co id="output-co" linkends="output"/> &lt;writer_module&gt; ...
+	format <co id="format-co" linkends="format"/> &lt;encoder_module&gt; ...
+	level  <co id="level-co" linkends="level"/> &lt;level&gt;
+}</programlisting>
+      <calloutlist>
+        <callout arearefs="output-co" id="output">
+          <para><emphasis>output</emphasis>：日志输出到什么地方，默认值是<command>stderr</command></para>
+        </callout>
+        <callout arearefs="format-co" id="format">
+          <para><emphasis>format</emphasis>：日志的输出格式。如果<command>output</command>配置为<command>stdout</command>的话，默认值就是<command>console</command>，否则就是<command>json</command></para>
+        </callout>
+        <callout arearefs="level-co" id="level">
+          <para><emphasis>level</emphasis>：日志的级别，默认值是<command>INFO</command>。目前，caddy日志仅输出<command>INFO</command>和<command>ERROR</command>两个级别。</para>
+        </callout>
+      </calloutlist>https://caddyserver.com/docs/caddyfile/directives/log
+      
+    </sect1>
+    
+    <sect1><title>输出（Output modules）</title>
+      <para><command>output</command>指令让我们定义将日志输出到什么地方，一共有6个配置选项：</para>
+      <orderedlist>
+        <listitem><command>stderr</command>
+          <para>这个选项是将日志直接输出到控制台（console），也是caddy默认使用的选项。</para>
+          <screen>output stderr</screen>different
+        </listitem>
+        
+        <listitem><command>stdout</command>
+          <para>将日志直接输出到控制台上。</para>
+          <screen>output stdout</screen>
+          <tip>笔者试验的结果，本以为<command>stderr</command>只是在控制台输出错误日志，但<command>stderr</command>和<command>stdout</command>似乎输出日志的结果是一样的，都是在console台上输出，也没看出什么差别。</tip>
+        </listitem>
+        
+        <listitem><command>discard</command>
+          <para>不在任何地方输出日志信息。</para>
+          <screen>output discard</screen>
+        </listitem>
+        https://caddyserver.com/docs/caddyfile/directives/log
+        <listitem><command>file</command>
+          <para>把日志记录到文件中，默认情况下，为防止磁盘耗尽，和其他系统日志一样，caddy的新日志会采用某种机制覆盖老的日志（滚动机制），有几个选项来配置：</para>
+          <screen>output file &lt;filename&gt; {
+	roll_disabled
+	roll_size     &lt;size&gt;
+	roll_keep     &lt;num&gt;
+	roll_keep_for &lt;days&gt;
+}</screen>
+          <orderedlist>
+            <listitem><command>filename</command>：指定日志输出到哪个文件，例如：<filename>/var/log/caddy/access.log</filename></listitem>
+            <listitem><command>roll_disabled</command>：禁用日志滚动。这可能会导致磁盘空间耗尽，因此只有在有其他方式维护日志文件时才使用此方法。</listitem>
+            <listitem><command>roll_size</command>：滚动日志文件的大小，默认值是100MB。</listitem>
+            <listitem><command>roll_keep</command>：在删除旧日志文件之前所保存的日志文件的数量，默认值是10。</listitem>
+            <listitem><command>roll_keep_for</command>：is how long to keep rolled files as a duration string. The current implementation supports day resolution; fractional values are rounded up to the next whole day. For example, 36h (1.5 days) is rounded up to 48h (2 days). Default: 2160h (90 days)</listitem>https://caddyserver.com/docs/caddyfile/directives/log
+          </orderedlist>
+          
+        </listitem>
+        
+        <listitem><command>net</command>
+          <para>将日志输出到网络中的其他日志服务器。如果日志服务器不可用，那caddy会将日志输出到<command>stderr</command>，直到日志服务器恢复。</para>
+          <screen>output net &lt;address&gt; {
+	dial_timeout &lt;duration&gt;
+}</screen>
+          <orderedlist>
+            <listitem><command>address</command>：有两个部分组成<command>protocol/address</command>，<command>protocol</command>指得是协议，默认为tcp，<command>address</command>指得是地址，如192.168.20:514</listitem>
+            <listitem><command>dial_timeout</command>：成功地写到日志服务器中可以等待的时间。
+              <tip><command>dial_timeout</command>似乎应该有个默认值，但caddy的官方文档并没有给出，查看caddy的源代码，在日志模块文件<filename>modules/logging/netwriter.go</filename>中也没有找到相应的设置。</tip>
+            </listitem>
+            
+          </orderedlist>
+        </listitem>
+
+      </orderedlist>
+    </sect1>
+    
+    <sect1><title>格式（Format modules）</title>
+      
+
+        <para><command>format</command>指令可以让我们指定日志的格式，即日志信息如何来封装。这个指令包含在<command>log</command>里面，</para>
+        <screen>log {
+  format json
+}</screen>
+
+
+
+      <sect2><title>格式类型</title>
+        <orderedlist>
+          <listitem><command>console</command>
+            <para>使用如下命令指定<command>console</command></para>
+            <screen>format console</screen>
+            <para>这种方式的日志格式看起来是混合了文本与JSON两种格式，也是caddy默认使用的日志格式。每行日志的前面是以时间戳为首的4个字段，后面是一段JSON格式的日志信息，如下：</para>
+
+            <screen><textobject><textdata  fileref="../source/fileserver-log-console.log"/></textobject></screen>
+            <para>前面的4个字段是：<option>level</option>、<option>time</option>、<option>name</option>、<option>msg</option>。</para>
+            
+          </listitem>
+          <listitem><command>json</command>
+            <para><command>json</command>指令指定日志使用json格式。这会指定每条日志条目都使用json格式</para>
+            <screen>format json</screen>
+            <para>可以使用命令<command>cat access.log | jq</command>来格式化日志信息。</para>
+          </listitem>
+          <listitem><command>single_field</command>
+            <para>这是一个被弃用、并且在未来的某一个版本中就会被移除的格式。</para>
+            <screen>format single_field &lt;field_name&gt;</screen>
+            <para>如果我们想要<command>common_log</command>格式的日志，可以使用这个命令：<command>format single_field common_log</command>。在caddy的文档中，这个功能已经被<emphasis>format-encoder</emphasis>替代。<link xlink:href="https://github.com/caddyserver/format-encoder"/></para>
+          </listitem>
+          <listitem><command>filter</command>
+            <para><command>filter</command>是一种可以根据需要对日志进行“筛选”的格式，它需要将<command>json</command>或<command>console</command>格式中的一种重新“包装”起来，然后再对字段进行“筛选”。</para>
+            <screen>format filter {
+	wrap json ...
+	fields {
+		&lt;field&gt; &lt;filter&gt; ...
+	}
+}</screen>
+            <itemizedlist>
+              <listitem><para><command>&lt;field&gt;</command>：因为fields是可以嵌套的，在这里，为了表示嵌套的关系可以使用<command>&gt;</command>来表示，例如有一个对象{"a":{"b":0}}，我们就可以使用a&gt;b来表示。</para></listitem>
+              <listitem><para><command>&lt;filter&gt;</command>：目前有3个“筛选器”：<command>delete</command>、<command>replace</command>和<command>ip_mask</command></para></listitem>
+            </itemizedlist>
+            <para>其中，<command>ts</command>、<command>level</command>、<command>logger</command>和<command>msg</command>四个字段不能应用于“筛选”机制。这个四个字段是日志的基础内容，是由日志系统而非caddy决定的。</para>
+            <para>以下是“筛选”器的说明：</para>
+            <orderedlist>
+              <listitem><command>delete</command>
+                <para>使用这个命令来标注哪个字段将被忽略。</para>
+                <screen>&lt;field&gt; delete</screen>
+                
+              </listitem>
+              <listitem><command>replace</command>
+                <para>使用这个命令来标记某个字段使用自定义的字符串替代。</para>
+                <screen>&lt;field&gt; replace &lt;replacement&gt;</screen>
+              </listitem>
+              <listitem><command>ip_mask</command>
+                <para>标记IP地址使用CIDR掩码，以IPv4的ip地址例，有32个bit为，如果标记为<command>ipv4 24</command>，那么在日志中只记录前24个bit位，后面的8个记录为0，例如，有一个ip地址192.168.2.1，那么会被记录为192.168.2.0。使用方式如下：</para>
+                <screen>&lt;field&gt; ip_mask {
+	ipv4 &lt;cidr&gt;
+	ipv6 &lt;cidr&gt;
+}</screen>
+              </listitem>
+            </orderedlist>
+            <para>作为<command>filter</command>的配置，我们可以用下面的例子来说明：</para>
+            <screen>log {
+  format filter { <co id="filter-co" linkends="filter"/>
+    wrap console
+    fields {
+      common_log delete <co id="common_log-co" linkends="common_log"/>
+      request>remote_addr ip_mask {
+        ipv4 24 <co id="ipv4-co" linkends="ipv4"/>
+        ipv6 32
+      }
+    }
+  }
+}</screen>
+
+            <calloutlist>
+              <callout arearefs="filter-co" id="filter">
+                <para>在这个filter中，封装了console</para>
+              </callout>
+              <callout arearefs="common_log-co" id="common_log">
+                <para>将common_log部分删除</para>
+              </callout>
+              <callout arearefs="ipv4-co" id="ipv4">
+                <para>对ipv4的ip地址只记录前24位，ipv6的ip地址只记录前32位</para>
+              </callout>
+            </calloutlist>      
+          </listitem>
+
+        </orderedlist>
+        <para></para>
+      </sect2>
+
+
+      <sect2><title>格式属性</title>
+        <para>对每种日志格式，特别是<command>console</command>和<command>json</command>还有一些属性可以设置：</para>
+        <screen>format &lt;encoder_module&gt; {
+    message_key &lt;key&gt;
+    level_key   &lt;key&gt;
+    time_key    &lt;key&gt;
+    name_key    &lt;key&gt;
+    caller_key  &lt;key&gt;
+    stacktrace_key &lt;key&gt;
+    line_ending  &lt;char&gt;
+    time_format  &lt;format&gt;
+    level_format &lt;format&gt;
+}</screen>
+
+
+        <orderedlist>
+          <listitem><command>message_key</command>
+            <para>日志条目中“message”字段的关键字，默认值是"msg"。</para>
+          </listitem>
+          <listitem><command>level_key</command>
+            <para>日志条目中“level”字段的关键字，默认值是“level”。</para>
+          </listitem>
+          <listitem><command>time_key</command>
+            <para>日志条目中“time”字段的关键字，默认值是“ts”。</para>
+          </listitem>
+          <listitem><command>name_key</command>
+            <para>日志条目中“name”字段的关键字，默认值是“logger”。</para>
+            <tip>在caddy的官方文档中，说这个字段的默认值是"name"，但笔者试验下来，其实是"logger"。</tip>
+          </listitem>
+          <listitem><command>caller_key</command>
+            <para>日志条目中“caller”字段的关键字。</para>
+          </listitem>
+          <listitem><command>stacktrace_key </command>
+            <para>日志条目中“stracktrace”字段的关键字。</para>
+          </listitem>
+          <listitem><command>line_ending</command>
+            <para>每条日志条目的结尾字符，默认是回车符。</para>
+          </listitem>
+          <listitem><command>time_format </command>
+            <para>日志条目中时间戳的格式。</para>
+            <para>笔者没有在caddy的官方文档中找到具体有哪些“时间格式”，通过查阅源代码，在<filename>modules/logging/encoders.go</filename>文件中找到如下代码：</para>
+            <programlisting linenumbering="numbered" language="common"><?dbfo pgwide="0"?><textobject><textdata  fileref="../source/caddy_time_format.txt"/></textobject></programlisting>
+            <para>从这段代码中可以看到，时间格式有如下几种：</para><para><option>unix_seconds_float</option>、<option>unix_milli_float</option>、<option>unix_nano</option>、<option>iso8601</option>、<option>rfc3339</option>、 <option>rfc3339_nano</option>、<option>wall</option>、 <option>wall_milli</option>、<option>wall_nano</option>、<option>common_log</option>。</para>
+            <para>其默认值是<option>unix_seconds_float</option>。</para>
+            
+          </listitem>
+          <listitem><command>level_format</command>
+            <para>日志条目中level的格式。</para>
+            <para>同样，在caddy的官方文档中没有找到具体有哪些“level格式”，通过查阅源代码，在<filename>modules/logging/encoders.go</filename>文件中找到如下代码：</para>
+            <programlisting linenumbering="numbered" language="common"><?dbfo pgwide="0"?><textobject><textdata  fileref="../source/caddy_level_format.txt"/></textobject></programlisting>
+            <para>从这段代码中可以看到，时间格式有如下几种：<option>lower</option>、<option>upper</option>、<option>color</option>。</para>
+            <para>其默认值是<option>lower</option>。即小写、大写和彩色。当设置为<option>color</option>时，在日志条目中level字段会有一段彩色编码：<option>"level":"\u001b[34mINFO\u001b[0m" ...</option></para>
+          </listitem>
+        </orderedlist>
+        <tip>笔者实验下来，在所有这些格式属性中，大部分只是对json格式的日志有效，对console等格式是无效的，例如：<command>message_key</command>、<command>level_key</command>、<command>time_key</command>和<command>name_key</command>这四项，在console的格式配置中是无意义的，因为console日志格式的第一行前四项就是这四个字段，他们以"无key"的方式直接显示。</tip>
+      </sect2>
+      
+
+    </sect1>
+
+</chapter>

@@ -1,0 +1,32 @@
+	// time format
+	var timeFormatter zapcore.TimeEncoder
+	switch lec.TimeFormat {
+	case "", "unix_seconds_float":
+		timeFormatter = zapcore.EpochTimeEncoder
+	case "unix_milli_float":
+		timeFormatter = zapcore.EpochMillisTimeEncoder
+	case "unix_nano":
+		timeFormatter = zapcore.EpochNanosTimeEncoder
+	case "iso8601":
+		timeFormatter = zapcore.ISO8601TimeEncoder
+	default:
+		timeFormat := lec.TimeFormat
+		switch lec.TimeFormat {
+		case "rfc3339":
+			timeFormat = time.RFC3339
+		case "rfc3339_nano":
+			timeFormat = time.RFC3339Nano
+		case "wall":
+			timeFormat = "2006/01/02 15:04:05"
+		case "wall_milli":
+			timeFormat = "2006/01/02 15:04:05.000"
+		case "wall_nano":
+			timeFormat = "2006/01/02 15:04:05.000000000"
+		case "common_log":
+			timeFormat = "02/Jan/2006:15:04:05 -0700"
+		}
+		timeFormatter = func(ts time.Time, encoder zapcore.PrimitiveArrayEncoder) {
+			encoder.AppendString(ts.UTC().Format(timeFormat))
+		}
+	}
+	cfg.EncodeTime = timeFormatter

@@ -1,0 +1,180 @@
+<chapter><title>配置案例及日志解析</title>
+  
+  <para>为了能更清晰地描述，我们在局域网中设立一台caddy服务器，我们称为<emphasis>Server</emphasis>，其内网IP地址是192.168.31.2/24，外网IP地址是192.168.1.2/24。我们在其上安装Debian Linux（V12）。使用如下命令安装caddy：</para>
+    <screen>$ sudo apt install -y debian-keyring debian-archive-keyring apt-transport-https
+$ curl -1sLf 'https://dl.cloudsmith.io/public/caddy/testing/gpg.key' | \
+      sudo tee /etc/apt/trusted.gpg.d/caddy-testing.asc
+$ curl -1sLf 'https://dl.cloudsmith.io/public/caddy/testing/debian.deb.txt' | \
+      sudo tee /etc/apt/sources.list.d/caddy-testing.list
+$ sudo apt update
+$ sudo apt install caddy</screen>
+    <para>安装结束后，caddy的配置文件位于<filename>/etc/caddy</filename>目录下。工作目录位于<filename>/usr/share/caddy</filename>目录下。</para>
+    <figure pgwide="0"><title>caddy服务器网络拓扑图</title><graphic fileref="images/env.png" width="200px"/></figure>
+    <para>在配置和查看caddy日志过程中会碰到很多json格式的文件，为了能更好的查看这些文件，需要一个json格式化工具<command>jq</command>。<command>jq</command>是一个基于命令行的、轻量级JSON文件处理工具。在Debian或Ubuntu下可通过<command>apt-get install jq</command>来安装。关于其更多内容请访问：<link xlink:href="https://stedolan.github.io/jq/"/>。</para>
+    
+    
+  <sect1><title>静态文件服务器</title>
+  
+    <sect2><title>默认情况</title>
+      <para>编辑<filename>/etc/caddy/Caddyfile</filename>文件，内容如下：</para>
+      <programlistingco>
+        <areaspec units="linecolumn">
+          <area id="logoutput-co" linkends="logoutput" coords="5 45"/>          
+        </areaspec> 
+        <programlisting linenumbering="numbered" language="common"><textobject><textdata  fileref="../source/fileserver.log.default.conf"/></textobject></programlisting>
+        <calloutlist>
+          <callout arearefs="logoutput-co"  id="logoutput" >
+            <para>指定日志的输出路径为<filename>/usr/share/caddy/access.log</filename>。</para>
+          </callout>
+        </calloutlist>        
+      </programlistingco>  
+      <para>在配置文件中没有指定日志的格式，当我们从浏览器访问<userinput>https://192.168.31.2/index.html</userinput>时，会产生如下的一条日志<subscript>（为了方便显示和说明，我们将这条日志信息进行了分行处理，实际上下面的日志信息是一条记录）</subscript>：</para>  
+      <!-- screen linenumbering="numbered"><textobject><textdata  fileref="../source/fileserver.log.default.jq"/></textobject></screen -->
+      
+      <programlistingco>
+        <areaspec units="linecolumn">
+          <area id="timestamp-co" linkends="timestamp" coords="1 24"/>
+          <area id="loglevel-co" linkends="loglevel" coords="1 31"/>        
+          <area id="logger-co" linkends="logger" coords="1 54"/>        
+          <area id="message-co" linkends="message" coords="1 73"/>            
+        </areaspec> 
+        <screen linenumbering="numbered"><textobject><textdata  fileref="../source/fileserver.log.default.jq"/></textobject></screen>
+        
+        <calloutlist>
+          <callout arearefs="timestamp-co"  id="timestamp" >
+            <para>时间戳，默认情况下使用了wall-milli。wall的意思是“墙上的钟”，即这个格式是我们可以很容易辨认的格式，milli是毫秒级的意思，即时间精确到毫秒；</para>
+          </callout>
+          <callout arearefs="loglevel-co"  id="loglevel" >
+            <para>日志的level，默认情况下是info；</para>
+          </callout>
+          <callout arearefs="logger-co"  id="logger" >
+            <para>产生日志的模块；</para>
+          </callout>
+          <callout arearefs="message-co"  id="message" >
+            <para>消息（msg）名称。</para>
+          </callout>
+        </calloutlist>        
+      </programlistingco>
+      <para>上面的四个元素包含在第一行中，剩下的内容被封装在json结构中。</para>
+    </sect2>
+    
+    <sect2><title>console格式</title>
+     <para>我们接下来更改<filename>Caddyfile</filename>文件，使用<command>console</command>的格式来封装日志信息，并使用<command>caddy run</command>命令来重新运行caddy：</para>
+     <programlistingco>
+        <areaspec units="linecolumn">
+          <area id="LogOutputConsole-co" linkends="LogOutputConsole" coords="6 21"/>          
+        </areaspec> 
+        <programlisting linenumbering="numbered" language="common"><textobject><textdata  fileref="../source/fileserver.log.console.conf"/></textobject></programlisting>
+        <calloutlist>
+          <callout arearefs="LogOutputConsole-co"  id="LogOutputConsole" >
+            <para>指定日志格式是<command>console</command>。</para>
+          </callout>
+        </calloutlist>        
+      </programlistingco>  
+    
+      <programlistingco>
+        <areaspec units="linecolumn">
+          <area id="ConsoleTimestamp-co" linkends="ConsoleTimestamp" coords="1 23"/>
+        </areaspec> 
+        <screen linenumbering="numbered"><textobject><textdata  fileref="../source/fileserver.log.console.jq"/></textobject></screen>
+        
+        <calloutlist>
+          <callout arearefs="ConsoleTimestamp-co"  id="ConsoleTimestamp" >
+            <para>时间戳，<command>console</command>格式下的时间戳和默认情况的格式还是不一样的。<command>console</command>使用了unix_milli_float类型；</para>
+          </callout>
+          
+        </calloutlist>        
+      </programlistingco>      
+    
+      
+     
+    </sect2>
+    
+    <sect2><title>json格式</title>
+      <para>我们接下来更改<filename>Caddyfile</filename>文件，使用<command>json</command>的格式来封装日志信息，并使用<command>caddy run</command>命令来重新运行caddy：</para>
+      <programlistingco>
+        <areaspec units="linecolumn">
+          <area id="LogOutputJson-co" linkends="LogOutputJson" coords="6 19"/>          
+        </areaspec> 
+        <programlisting linenumbering="numbered" language="common"><textobject><textdata  fileref="../source/fileserver.log.json.conf"/></textobject></programlisting>
+        <calloutlist>
+          <callout arearefs="LogOutputJson-co"  id="LogOutputJson" >
+            <para>指定日志格式是<command>json</command>。</para>
+          </callout>
+        </calloutlist>        
+      </programlistingco>  
+      
+      
+      <para>所有的日志信息就被封装成一条json结构的数据：</para>
+      <screen linenumbering="numbered"><textobject><textdata  fileref="../source/fileserver.log.json.jq"/></textobject></screen>
+    </sect2>
+    
+    <sect2><title>格式属性案例</title>
+      <para>我们接下来在<filename>Caddyfile</filename>文件中加入更多的封装属性，并使用<command>caddy run</command>命令来重新运行caddy：</para>
+      <programlistingco>
+        <areaspec units="linecolumn">
+          <area id="LogOutputJsonProperty-co" linkends="LogOutputJsonProperty" coords="6 21"/>
+          <area id="LogOutputJsonPropertyMsgKey-co" linkends="LogOutputJsonPropertyMsgKey" coords="7 37"/>
+          <area id="LogOutputJsonPropertyLevelKey-co" linkends="LogOutputJsonPropertyLevelKey" coords="8 36"/>
+          <area id="LogOutputJsonPropertyTimeKey-co" linkends="LogOutputJsonPropertyTimeKey" coords="9 30"/>
+          <area id="LogOutputJsonPropertyNameKey-co" linkends="LogOutputJsonPropertyNameKey" coords="10 36"/>
+          <area id="LogOutputJsonPropertyTimeFormat-co" linkends="LogOutputJsonPropertyTimeFormat" coords="11 42"/>
+          <area id="LogOutputJsonPropertyLevelFormat-co" linkends="LogOutputJsonPropertyLevelFormat" coords="12 30"/>
+        </areaspec> 
+        <programlisting linenumbering="numbered" language="common"><textobject><textdata  fileref="../source/fileserver.log.json.property.conf"/></textobject></programlisting>
+        <calloutlist>
+          <callout arearefs="LogOutputJsonProperty-co"  id="LogOutputJsonProperty" >
+            <para>指定日志格式是<command>json</command>。</para>
+          </callout>
+          <callout arearefs="LogOutputJsonPropertyMsgKey-co"  id="LogOutputJsonPropertyMsgKey" >
+            <para>消息的关键字。</para>
+          </callout>
+          <callout arearefs="LogOutputJsonPropertyLevelKey-co"  id="LogOutputJsonPropertyLevelKey" >
+            <para>level的关键字。</para>
+          </callout>
+          <callout arearefs="LogOutputJsonPropertyTimeKey-co"  id="LogOutputJsonPropertyTimeKey" >
+            <para>时间戳关键字。</para>
+          </callout>
+          <callout arearefs="LogOutputJsonPropertyNameKey-co"  id="LogOutputJsonPropertyNameKey" >
+            <para>名称关键字。</para>
+          </callout>
+          <callout arearefs="LogOutputJsonPropertyTimeFormat-co"  id="LogOutputJsonPropertyTimeFormat" >
+            <para>时间格式。</para>
+          </callout>
+          
+          <callout arearefs="LogOutputJsonPropertyLevelFormat-co"  id="LogOutputJsonPropertyLevelFormat" >
+            <para>level格式。</para>
+          </callout>
+        </calloutlist>        
+      </programlistingco>  
+      
+      
+      <para>所有的日志信息就被封装成一条json结构的数据：</para>
+      <screen linenumbering="numbered"><textobject><textdata  fileref="../source/fileserver.log.json.property.jq"/></textobject></screen>
+    </sect2>
+    
+  </sect1>
+ 
+  <sect1><title>反向代理服务器</title>
+    <para>我们接下来更改<filename>Caddyfile</filename>文件，使用<command>json</command>的格式来封装日志信息，并使用<command>caddy run</command>命令来重新运行caddy：</para>
+    <programlistingco>
+        <areaspec units="linecolumn">
+          <area id="ReverseLogJson-co" linkends="ReverseLogJson" coords="6 19"/>          
+        </areaspec> 
+    <programlisting linenumbering="numbered" language="common"><textobject><textdata  fileref="../source/reverse.log.conf"/></textobject></programlisting>
+    <calloutlist>
+          <callout arearefs="ReverseLogJson-co"  id="ReverseLogJson" >
+            <para>指定日志格式是<command>json</command>。</para>
+          </callout>
+    </calloutlist>        
+    </programlistingco>  
+      
+      
+    <para>所有的日志信息就被封装成一条json结构的数据：</para>
+    <screen linenumbering="numbered"><textobject><textdata  fileref="../source/reverse.log.json.jq"/></textobject></screen>
+    
+    <para>nginx服务器的日志：</para>
+    <screen linenumbering="numbered"><textobject><textdata  fileref="../source/reverse.backend.nginx.log"/></textobject></screen>
+    
+  </sect1>
+</chapter>
