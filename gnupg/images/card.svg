@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="272"
+   height="133"
+   viewBox="0 0 71.966665 35.189584"
+   version="1.1"
+   id="svg4495"
+   inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)"
+   sodipodi:docname="card.svg">
+  <defs
+     id="defs4489">
+    <linearGradient
+       id="linearGradient6732">
+      <stop
+         style="stop-color:#ffffff;stop-opacity:1;"
+         offset="0"
+         id="stop6734" />
+      <stop
+         style="stop-color:#dddddd;stop-opacity:1;"
+         offset="1"
+         id="stop6736" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient3688">
+      <stop
+         style="stop-color:black;stop-opacity:1;"
+         offset="0"
+         id="stop3690" />
+      <stop
+         style="stop-color:black;stop-opacity:0;"
+         offset="1"
+         id="stop3692" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient3702">
+      <stop
+         style="stop-color:black;stop-opacity:0;"
+         offset="0"
+         id="stop3704" />
+      <stop
+         id="stop3710"
+         offset="0.5"
+         style="stop-color:black;stop-opacity:1;" />
+      <stop
+         style="stop-color:black;stop-opacity:0;"
+         offset="1"
+         id="stop3706" />
+    </linearGradient>
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3688"
+       id="radialGradient5380"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(2.003784,0,0,1.4,27.98813,-17.4)"
+       cx="4.9929786"
+       cy="43.5"
+       fx="4.9929786"
+       fy="43.5"
+       r="2.5" />
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3688"
+       id="radialGradient5382"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(2.003784,0,0,1.4,-20.01187,-104.4)"
+       cx="4.9929786"
+       cy="43.5"
+       fx="4.9929786"
+       fy="43.5"
+       r="2.5" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3702"
+       id="linearGradient5384"
+       gradientUnits="userSpaceOnUse"
+       x1="25.058096"
+       y1="47.027729"
+       x2="25.058096"
+       y2="39.999443" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient6732"
+       id="linearGradient5386"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(1.6501097,0,0,1.0902385,-3.5049068,251.99244)"
+       x1="11.511479"
+       y1="0.75951481"
+       x2="31.5"
+       y2="36.625" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1"
+     inkscape:cx="-18"
+     inkscape:cy="276"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     units="px"
+     inkscape:window-width="1920"
+     inkscape:window-height="1016"
+     inkscape:window-x="0"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata4492">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-261.8104)">
+    <g
+       id="g866"
+       transform="matrix(1,0,0,0.99738284,0,0.77729773)">
+      <g
+         transform="matrix(1.799166,0,0,1.1111687,-7.1966675,244.77509)"
+         style="display:inline"
+         id="g5340"
+         inkscape:label="Shadow">
+        <g
+           id="g5342"
+           style="opacity:0.4"
+           transform="matrix(1.052632,0,0,1.285713,-1.263158,-13.42854)">
+          <rect
+             y="40"
+             x="38"
+             height="7"
+             width="5"
+             id="rect5344"
+             style="opacity:1;fill:url(#radialGradient5380);fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+          <rect
+             transform="scale(-1)"
+             y="-47"
+             x="-10"
+             height="7"
+             width="5"
+             id="rect5346"
+             style="opacity:1;fill:url(#radialGradient5382);fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+          <rect
+             y="40"
+             x="10"
+             height="7.0000005"
+             width="28"
+             id="rect5348"
+             style="opacity:1;fill:url(#linearGradient5384);fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+        </g>
+      </g>
+      <path
+         id="rect5350"
+         d="m 3.0955648,294.51403 c 21.7951792,0 43.5903582,0 65.3855402,0 -0.166126,-10.8416 -0.332252,-21.6832 -0.498363,-32.52481 -21.629063,-0.0608 -43.25812,-0.12153 -64.8871772,-0.18231 0,10.90237 0,21.80473 0,32.70712 z"
+         style="display:inline;overflow:visible;visibility:visible;fill:url(#linearGradient5386);fill-opacity:1;fill-rule:evenodd;stroke:#939393;stroke-width:0.17695847;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dashoffset:0;stroke-opacity:1;marker:none;marker-start:none;marker-mid:none;marker-end:none"
+         inkscape:connector-curvature="0" />
+      <text
+         transform="scale(1.0011345,0.99886679)"
+         id="text5352"
+         y="286.25992"
+         x="5.2061596"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.16893649px;line-height:0%;font-family:sans-serif;-inkscape-font-specification:Sans;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.18074468px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         xml:space="preserve"><tspan
+           style="font-size:1.62670219px;line-height:1.25;font-family:sans-serif;stroke-width:0.18074468px"
+           y="286.25992"
+           x="5.2061596"
+           id="tspan5354"
+           sodipodi:role="line">pub   1024D/DC9C133F 2010-01-22 [expires: 2023-01-22]</tspan><tspan
+           style="font-size:1.62670219px;line-height:1.25;font-family:sans-serif;stroke-width:0.18074468px"
+           id="tspan5356"
+           y="288.2933"
+           x="5.2061596"
+           sodipodi:role="line">    Key fingerprint = 57D3 D886 7FF0 4014 F2CD  5A83 488B 20FB DC9C 133F</tspan><tspan
+           style="font-size:1.62670219px;line-height:1.25;font-family:sans-serif;stroke-width:0.18074468px"
+           id="tspan5358"
+           y="290.32666"
+           x="5.2061596"
+           sodipodi:role="line">uid                  Bob Lee &lt;bob@osslab.org&gt;</tspan><tspan
+           style="font-size:1.62670219px;line-height:1.25;font-family:sans-serif;stroke-width:0.18074468px"
+           id="tspan5360"
+           y="292.36005"
+           x="5.2061596"
+           sodipodi:role="line">sub   2048g/FCCB5D33 2010-01-22 [expires: 2023-01-22]</tspan></text>
+      <text
+         transform="scale(1.0011345,0.9988668)"
+         id="text5372"
+         y="272.20273"
+         x="5.9257574"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.40284514px;line-height:0%;font-family:'方正粗宋简体';-inkscape-font-specification:'方正粗宋简体';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.2002371px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         xml:space="preserve"><tspan
+           style="font-size:5.60663843px;line-height:1.25;stroke-width:0.2002371px"
+           y="272.20273"
+           x="5.9257574"
+           id="tspan5374"
+           sodipodi:role="line">LogNovel</tspan></text>
+      <text
+         transform="scale(1.0011345,0.9988668)"
+         id="text5376"
+         y="279.1763"
+         x="9.1592731"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.40284514px;line-height:0%;font-family:'方正粗宋简体';-inkscape-font-specification:'方正粗宋简体';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.2002371px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         xml:space="preserve"><tspan
+           style="font-size:3.6042676px;line-height:1.25;stroke-width:0.2002371px"
+           y="279.1763"
+           x="9.1592731"
+           id="tspan5378"
+           sodipodi:role="line">developer</tspan></text>
+      <text
+         transform="scale(1.0011345,0.9988668)"
+         id="text4886"
+         y="269.34094"
+         x="33.875126"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:semi-condensed;font-size:2.40284514px;line-height:0%;font-family:'方正大标宋简体';-inkscape-font-specification:'方正大标宋简体 Semi-Condensed';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.2002371px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         xml:space="preserve"><tspan
+           style="font-size:2.60308218px;line-height:1.25;stroke-width:0.2002371px"
+           y="269.34094"
+           x="33.875126"
+           id="tspan4888"
+           sodipodi:role="line">Name : Bob Lee</tspan><tspan
+           style="font-size:2.60308218px;line-height:1.25;stroke-width:0.2002371px"
+           id="tspan4890"
+           y="272.59479"
+           x="33.875126"
+           sodipodi:role="line">Phone: +86-21-xxxxxxxx </tspan><tspan
+           style="font-size:2.60308218px;line-height:1.25;stroke-width:0.2002371px"
+           id="tspan4892"
+           y="275.84863"
+           x="33.875126"
+           sodipodi:role="line">FAX. : +86-21-xxxxxxxx</tspan><tspan
+           style="font-size:2.60308218px;line-height:1.25;stroke-width:0.2002371px"
+           id="tspan4902"
+           y="279.10251"
+           x="33.875126"
+           sodipodi:role="line">Email : bob@lognovel.com</tspan></text>
+    </g>
+  </g>
+</svg>

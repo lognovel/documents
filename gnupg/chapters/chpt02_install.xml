@@ -1,0 +1,51 @@
+<chapter><title>安装</title>
+<sect1><title>GnuPG的源程序</title>
+<para>正式的下载站点是：<link xlink:href="http://www.gnupg.org/download.html">GnuPG主页</link>。 </para>
+
+<para>由于法律限制的缘故，从美国的服务器下载GnuPG是不被允许的。美国对加解密软件的出口有限制。这是为什么PGP总是有国际和美国两个版本的原因。国际版的源程序是以印刷成书的方式出口的。书到了欧洲（挪威奥斯陆）再被扫描进计算机。更多这方面的信息可以在国际PGP主页找到。PGP的国际版可以自由进入美国，只要它不又被出口出去。</para>
+
+
+</sect1>
+
+<sect1><title>设置</title>
+<para>你可以用如下方式得到GnuPG：Debian软件包，RPM（Redhat软件包管理程序）软件包，或源程序。这些软件包将在Linux系统上安装执行文件及所需的工具。若你想在别的系统上使用GnuPG，则需要自己编译源程序。</para>
+
+<para>由于该程序的主要部分是在Linux（x86）操作系统上进行的，将它移植到别的操作系统上应该不会太难。已知的支持GnuPG的操作系统的名单可以在GnuPG主页找到。下列设置方法适用于大多数系统，它用于从一个源程序打包来安装GnuPG:</para>
+
+<para>先用以下命令打开该打包：</para>
+<blockquote>
+    <para><command>tar xvzf gnupg-x.x.x.tar.gz</command></para>
+</blockquote>
+<para>然后，cd到包含源程序的目录。然后敲入</para>
+<blockquote>
+   <para><command>./configure</command></para>
+</blockquote>
+
+<para>做这件事时，应该没有任何特殊的事情发生。如果敲入</para>
+<blockquote>
+   <para><command>./configure --help</command></para>
+</blockquote>
+
+<para>你可以看到编译时的所有可选项。如果出现与国际化（GET text）有关的问题，你可以用<parameter>--with-included-gettext</parameter>这个选项包含一个与源程序同在一个打包中的版本，或用<parameter>--disable-NLS</parameter>选项来将其关掉。</para>
+</sect1>
+
+<sect1><title>编译</title>
+<para>这之后可以敲入下列来编译：</para>
+<blockquote>
+   <para><command>make</command></para>
+</blockquote>
+<para>这一步应该不会出任何问题。如果出了问题，请按照顺序采取如下步骤：首先，试试能否自己解决问题（当然要参考可以弄到的各种档案资料）。然后，确定这个问题是否是一个已知的软件错误--bug（请检查http://www.gnupg.org处的BUGS文件）。 如果问题与路径有关，你应试试先<command>make clean</command>, 然后再次运行<command>configure</command>和<command>make</command>。</para>
+
+</sect1>
+
+<sect1><title>安装</title>
+<para>现在敲入:</para>
+<blockquote>
+   <para><command>make install</command></para>
+</blockquote>
+
+<para>来真正将可执行程序和手册页拷贝到安装目录中。如果你在设置<command>./configure</command>时没有更改安装目录，那么隐含的安装目录将是<filename>/usr/local/share/gnupg/</filename>。你可以在文件<filename>options.skel</filename>中找到这个目录。如果你把这个文件拷贝成<filename>~/.gnupg/options</filename>文件并对其中的选项做出适当的改变，那么这个文件将被用作标准。当建立<filename>~/.gnupg/</filename>目录时，上述文件的拷贝将自动进行。在该文件中，所有选项均有良好的说明资料，在此解释它们意义不大。</para>
+
+<para>你可以以设置有效用户身份为超级用户（suid root）的方式来运行GnuPG，这样程序运行时就有超级用户的所有权限。这样做，你就去除了一种危险，即程序的一部分被存储于内存之外而可能被别人读到。由我来帮助分析这样做的风险是不现实的。但是，以suid root的方式来执行这个程序，你应该警惕特洛伊木马的危险，因为一个以超级用户权限运行的特洛伊木马有能力破坏整个系统。如果因为这个原因（或任何其他原因）你选择不以超级用户权限来运行GnuPG，你可以在<filename>~/gnupg/options</filename>文件中设置<option>no-secmem-warning</option>来关掉相应的警告信息。 </para>
+</sect1>
+</chapter>

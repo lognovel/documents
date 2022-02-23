@@ -1,0 +1,111 @@
+<chapter><title>使用钥匙</title>
+<sect1><title>产生钥匙</title>
+<para>使用以下命令</para>
+<blockquote>
+   <para><command>gpg --gen-key</command></para>
+</blockquote>
+
+<para>以产生一个新的钥匙对（一个钥匙对包括一把隐密钥匙和相应的一把公开钥匙）。运行时，第一个问题是选择使用哪个算法。你可以在 PGP DH vs. RSA FAQ(http://www.hertreg.ac.uk/ss/pgpfaq.html) 或 Applied Cryptography (http://www.gnupg.org/(en)/howtos/ch/GPGMiniHowto-6.html#BSchneier)中读到更多算法方面的信息。对这个问题可以很容易地选择DSA/ElGamal。该算法没有专利。</para>
+
+<para>下一个问题是钥匙长度。对这个问题的答案因人而异。你需要在安全和计算时间二者选一。如果钥匙长些，讯息被截获后被破解的风险就小些。但是使用时计算时间也要长些。如果计算时间是考虑的重要因素，你仍然应该考虑到你将使用这把钥匙一段时间。我们都知道由于新处理器越来越快，使得数值计算速度增加非常快。因此，选择钥匙长度时，要考虑到这个因素。GnuPG要求的最短钥匙长度是768字位。不过，有人认为你应该使用2048位的钥匙（这实际也是GnuPG目前允许的最大长度）。就DSA而言，1024位是一个标准的长度。当安全是首要考虑因素而速度相对次要时，你应该选用最大可能的长度。</para>
+
+<para>程序现在要你输入你的名字，介绍和电子邮件地址。密码将根据以上输入的内容产生出来。你可以在将来改变这些设置。见钥匙管理。你应该用一个较长的真实的电子邮件地址，因为以上完整的用户身份识别（包括名字，介绍和电子邮件地址）都被签名。如果你修改了地址，签名就将与修改后的内容不符。最后一点，你可以输入一些介绍性内容。在此你输入什么都行，可以相当有用。</para>
+
+<para>最后，你得敲入密码，或称通行字（实际上，由于允许使用空格，叫作通行句更合适）。该密码使你可以使用与你的密钥有关的各项功能。一个好的通行句具有下列要素：</para>
+<para><itemizedlist>
+    <listitem><para>长度要长，</para></listitem>
+    <listitem><para>包含特殊字符（非英文字母或阿拉伯数字），</para></listitem>
+    <listitem><para>要是某种特殊的东西（不能是姓名），</para></listitem>
+    <listitem><para>要很难被猜到（因此请万勿使用姓名，生日，电话号码，信用卡号码，支票帐号号码，小孩的姓名或人数等）</para></listitem>
+       </itemizedlist>
+</para>
+
+<para>在通行句中，用大小写混杂的方式你可以进一步增进安全。当你想出密码时，一定要保证你不会忘掉它。如果你忘掉了，发给你的讯息就再也没法解密因而再也没法读了，你的密钥也再也用不成了。产生包含这个信息的某种形式的证书可能是一种明智之举。（当然要小心不要让别人得到你的通行句）。见取消钥匙.</para>
+
+<para>在上述所有都输入之后，系统开始产生钥匙。这会花一些时间。在这段时间，它需要收集许多随机数据。如果你在这段时间在另一个窗口工作，你就可以帮助系统收集随机数据。正如你现在已经懂得的，产生出的钥匙总是不同的。如果你在现在和五分钟后输入完全相同的数据来产生钥匙，你会得到两把不同的钥匙。现在你一定明白为什么你不应该忘记你的通行句了。 </para>
+
+
+</sect1>
+<sect1><title>输出钥匙</title>
+<para>下列命令可以输出一个用户的钥匙：(输出的是公钥还是密钥？应该是公钥)</para>
+<blockquote>
+   <para><command>gpg --export [UID]</command></para>
+</blockquote>
+<para>如果没有给出一个用户身份识别（UID），所有现有的钥匙都会被输出。隐含地，结果将输出到标准输出（ stdout）去。但是用-o 选项可以把它放到一个文件里去。建议你同时使用 -a 选项来把钥匙写进一个7位的文件，而不是一个二进制文件。</para>
+
+<para>输出钥匙后，你就可以增大你的视野。别人可以与你安全地通讯了。你可以把钥匙放在你的主页上，用finger服务，用钥匙服务器，或任何别的你能想到的方式来让别人知道你的公钥。 </para>
+</sect1>
+<sect1><title>引进钥匙</title>
+<para>当你收到一把别人的公钥（或好几把公钥）时，为了能使用它们，你得把它们加进你的钥匙数据库。加进数据库的命令如下：</para>
+<blockquote>
+   <para><command>gpg --import [Filename]</command></para>
+</blockquote>
+<para>如果文件名（filename）省略了，数据将从标准输入（stdin）读入。</para>
+</sect1>
+
+<sect1><title>取消钥匙</title>
+<para>因为好些原因，你可以想要取消一把已经存在的钥匙，例如：密钥被盗了或被不该得到它的人得到，用户身份识别改变了，钥匙不够长了，等等。对上述各种情况，取消钥匙的命令是：</para>
+<blockquote>
+   <para><command>gpg --gen-revoke</command></para>
+</blockquote>
+<para>该命令将产生一份取消钥匙证书。 要这么做，一定要先有密钥！ 否则任何人都能取消你的钥匙。这种方法有一个缺点：如果我不知道通行句就用不了密钥。但用不了密钥，我就不能取消我的钥匙。为解决这个问题，在你产生钥匙对的时候就产生一份取消钥匙证书是一种明智的做法。如果你这样做的话，一定要把证书保存好！你可以把它放在磁盘上，纸张上，等等。一定要保证证书不落入坏人之手！！！否则别人就可以发出该证书取消你的钥匙，使你的钥匙作废。</para>
+</sect1>
+
+<sect1><title>钥匙管理</title>
+<para>随系统而来，有一个文件，起到某种数据库的作用。所有有关钥匙和钥匙附带信息的数据都存在这个文件里（只有一样例外：主人的信任值。更多的信息见钥匙签名）。用</para>
+<blockquote>
+   <para><command>gpg --list-keys</command></para>
+</blockquote>
+<para>可以显示所有现有的钥匙。要想同时显示签名，用</para>
+<blockquote>
+   <para><command>gpg --list-sigs</command></para>
+
+</blockquote>
+<para>（更多的信息见 钥匙签名）。要想见到钥匙的指纹，敲入：</para>
+<blockquote>
+   <para><command>gpg --fingerprint</command></para>
+
+</blockquote>
+<para>用户需要见到”指纹”来确认某人的确是其自称是的人（就象在电话中一样）。这个命令将会产生一列相对较小的数字。</para>
+
+<para>要列出私密钥匙，你可以敲</para>
+<blockquote>
+   <para><command>gpg --list-secret-keys</command></para>
+
+</blockquote>
+<para>注意：列出私密钥匙的指纹和签名根本就没用。</para>
+
+<para>要删除一把公钥，你可以敲</para>
+<blockquote>
+   <para><command>gpg --delete-key UID</command></para>
+</blockquote>
+<para>要删除一把密钥，你可以敲</para>
+<blockquote>
+   <para><command>gpg --delete-secret-key</command></para>
+</blockquote>
+<para>还有一个与钥匙有关的重要命令：</para>
+<blockquote>
+   <para><command>gpg --edit-key UID</command></para>
+</blockquote>
+<para>用此命令你可以修改钥匙的失效日期，加进一个指纹，对钥匙签名等等。尽管显得太清楚而不用提，这里还是要说，要做以上事情你得用你的通行句。敲入通行句后，你会见到命令行。</para>
+</sect1>
+<sect1><title>钥匙签名</title>
+<para>正如前言所提到的，这个系统有一个最大的薄弱点，那就是公钥的真实性问题。如果用的是错误的公钥，你加密的价值就全没了。要克服这种风险，一种可能是对钥匙签名：你把你的签名放在一把钥匙上，这样你就绝对确信这把钥匙是真实的。这样，钥匙上的签名就表示承认钥匙上的用户身份确实是这把钥匙的主人。有了这个保证，用户就可以开始放心用这把钥匙加密了。</para>
+
+<para>要对一把钥匙签名，用 <command>gpg --edit-key UID</command> ，然后用<command>sign</command>命令。</para>
+
+<para>你只有在绝对确信一把钥匙的真实性的时候，才应该对它签名认可！！！ 例如你本人拿到了这把钥匙（比如说在一个钥匙签名派对上），或者你通过别的渠道得到了钥匙，然后检查了它的指纹（例如通过打电话询问）。你永远不应该光凭假设就对一把钥匙签名。</para>
+
+<para>GnuPG根据现有的签名和”主人的信任度”来决定钥匙的真实性。主人信任度是钥匙的主人用来决定对别的某把钥匙的信任程度的一个值。这个值可以是</para>
+<para>
+ <itemizedlist>
+    <listitem><para>1 = 我不知道</para></listitem>
+    <listitem><para>2 = 我不信任（这把钥匙）</para></listitem>
+    <listitem><para>3 = 我勉强信任</para></listitem>
+    <listitem><para>4 = 我完全信任</para></listitem>
+  </itemizedlist>
+</para>
+<para>如果用户不信任一个签名，可以就这么说，因而将弃这个签名不用。这些信任信息不是存在储存钥匙的文件里，而是存在另一个文件里。</para>
+
+</sect1>
+</chapter>

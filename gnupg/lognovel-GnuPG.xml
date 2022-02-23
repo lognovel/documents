@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE book 
+[
+    <!ENTITY legalnotice SYSTEM "../sharefiles/legalnotice.xml">
+    <!ENTITY info SYSTEM "info.xml">
+    <!ENTITY preface SYSTEM "../sharefiles/preface.xml">
+    
+    <!ENTITY chpt01_conception SYSTEM "chapters/chpt01_conception.xml">
+    <!ENTITY chpt02_install SYSTEM "chapters/chpt02_install.xml">
+    <!ENTITY chpt03_usekey SYSTEM "chapters/chpt03_usekey.xml">
+    <!ENTITY chpt04_encry SYSTEM "chapters/chpt04_encry.xml">
+    <!ENTITY chpt05_sigs SYSTEM "chapters/chpt05_sigs.xml">
+    <!ENTITY chpt06_case SYSTEM "chapters/chpt06_case.xml">
+    <!ENTITY chpt07_source SYSTEM "chapters/chpt07_source.xml">
+    <!ENTITY about SYSTEM "chapters/about.xml">
+]>
+
+<book xmlns:xlink='http://www.w3.org/1999/xlink'
+      xml:lang="zh_cn">
+<title>GnuPG(gpg)使用指南</title>
+<subtitle>加密、数字签名和非对称密钥</subtitle>
+&info;
+&preface;
+
+
+&chpt01_conception;
+&chpt02_install;
+&chpt03_usekey;
+&chpt04_encry;
+&chpt05_sigs;
+&chpt06_case;
+&chpt07_source;
+<!-- &about; -->
+</book>

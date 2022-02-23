@@ -1,0 +1,22 @@
+<chapter><title>信息来源</title>
+<sect1><title>GnuPG</title>
+<itemizedlist>
+    <listitem><para>GnuPG主页：http://www.gnupg.org/</para></listitem>
+    <listitem><para>GnuPG电子邮件名单，包括 GnuPG主页(http://www.gnupg.org/docs.html) 上的旧文档和描述。</para></listitem>
+    <listitem><para>GnuPG项目中所包含的信息，虽然还没有做很多。另外别忘了用</para>
+
+          <blockquote><para><command>gpg --help</command></para></blockquote>
+
+      <para>gpg的帮助信息。</para></listitem>
+</itemizedlist>
+
+</sect1>
+<sect1><title>PGP</title>
+<para>PGP是一个较老的，仍然被广为使用的加解密软件。自其出现后的这些年里，人们为其写了很多辅助资料。这些都是十分有用的信息。其中许多涵盖广泛，对GnuPG也适用。请在以下URL查找这些资料：</para>
+<itemizedlist>
+    <listitem><para>国际PGP主页：https://www.openpgp.org/</para></listitem>
+    <listitem><para>PGP DH和RSA算法 (http://www.hertreg.ac.uk/ss/pgpfaq.html)比较常见问题 包含这两种算法区别的信息。GnuPG正是使用这两种算法。</para></listitem>
+</itemizedlist>
+</sect1>
+
+</chapter>

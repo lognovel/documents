@@ -1,0 +1,33 @@
+<chapter><title>加密和解密</title>
+<para>在安装和按照需要设置好所有事以后，我们就可以开始加密和解密了。</para>
+
+<para>加密解密时，可以使用超过一把隐密钥匙。如果这种情况出现，你需要选择其中一把作为活跃的钥匙。要这样做，可以用命令行选项 -u UID 或用 --local-user UID 。这样做将以我们想要使用的钥匙取代隐含的钥匙。</para>
+
+<para>如果你想改变讯息接收者，可以用命令行选项 -r 或 --recipient 。 </para>
+<sect1><title>加密</title>
+<para>加密的命令是：</para>
+<blockquote>
+
+    <para><command>gpg -e Recipient [Data]</command></para>
+</blockquote>
+<para>或</para>
+<blockquote>
+
+    <para><command>gpg --encrypt Recipient [Data]</command></para>
+</blockquote>
+<para>为避免别人宣称是你的风险，对所有你加密的东西签名是有用的。见 签名。</para>
+</sect1>
+<sect1><title>解密</title>
+<para>解密的命令是：</para>
+<blockquote>
+
+    <para><command>gpg [-d] [Data]</command></para>
+</blockquote>
+<para>或</para>
+<blockquote>
+
+    <para><command>gpg [--decrypt] [Data]</command></para>
+</blockquote>
+<para>在此，预设输出为 stdout ，但可以使用 -o 选项将输出转向到一个文件。</para>
+</sect1>
+</chapter>

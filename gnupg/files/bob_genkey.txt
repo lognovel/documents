@@ -1,0 +1,65 @@
+bob@bob:~$ gpg --gen-key
+gpg (GnuPG) 1.4.9; Copyright (C) 2008 Free Software Foundation, Inc.
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Please select what kind of key you want:
+   (1) DSA and Elgamal (default)
+   (2) DSA (sign only)
+   (5) RSA (sign only)
+Your selection? 1
+DSA keypair will have 1024 bits.
+ELG-E keys may be between 1024 and 4096 bits long.
+What keysize do you want? (2048) 
+Requested keysize is 2048 bits
+Please specify how long the key should be valid.
+         0 = key does not expire
+      <n>  = key expires in n days
+      <n>w = key expires in n weeks
+      <n>m = key expires in n months
+      <n>y = key expires in n years
+Key is valid for? (0) 2y
+Key expires at Mon 23 Jan 2012 05:28:29 AM CST
+Is this correct? (y/N) y
+
+You need a user ID to identify your key; the software constructs the user ID
+from the Real Name, Comment and Email Address in this form:
+    "Heinrich Heine (Der Dichter) <heinrichh@duesseldorf.de>"
+
+Real name: Bob Lee
+Email address: bob@osslab.org
+Comment: 
+You selected this USER-ID:
+    "Bob Lee <bob@osslab.org>"
+
+Change (N)ame, (C)omment, (E)mail or (O)kay/(Q)uit? O
+You need a Passphrase to protect your secret key.
+
+We need to generate a lot of random bytes. It is a good idea to perform
+some other action (type on the keyboard, move the mouse, utilize the
+disks) during the prime generation; this gives the random number
+generator a better chance to gain enough entropy.
+++++++++++..++++++++++++++++++++..++++++++++...+++++..+++++.+++++.+++++.++++++++++++++++++++++++++++++...+++++..++++++++++.+++++...+++++++++++++++++++++++++..>+++++.........................................................+++++
+
+Not enough random bytes available.  Please do some other work to give
+the OS a chance to collect more entropy! (Need 284 more bytes)
+We need to generate a lot of random bytes. It is a good idea to perform
+some other action (type on the keyboard, move the mouse, utilize the
+disks) during the prime generation; this gives the random number
+generator a better chance to gain enough entropy.
++++++++++++++++++++++++++++++++++++++++++++++.++++++++++++++++++++.++++++++++.+++++++++++++++++++++++++..+++++....+++++....+++++....++++++++++.++++++++++++++++++++>..+++++.+++++>.+++++............+++++^^^^
+gpg: /home/bob/.gnupg/trustdb.gpg: trustdb created
+gpg: key DC9C133F marked as ultimately trusted
+public and secret key created and signed.
+
+gpg: checking the trustdb
+gpg: 3 marginal(s) needed, 1 complete(s) needed, PGP trust model
+gpg: depth: 0  valid:   1  signed:   0  trust: 0-, 0q, 0n, 0m, 0f, 1u
+gpg: next trustdb check due at 2012-01-22
+pub   1024D/DC9C133F 2010-01-22 [expires: 2012-01-22]
+      Key fingerprint = 57D3 D886 7FF0 4014 F2CD  5A83 488B 20FB DC9C 133F
+uid                  Bob Lee <bob@osslab.org>
+sub   2048g/FCCB5D33 2010-01-22 [expires: 2012-01-22]
+
+bob@bob:~$ 
+

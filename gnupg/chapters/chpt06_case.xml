@@ -1,0 +1,92 @@
+<chapter><title>情景模拟</title>
+  <sect1><title>产生密钥对</title>
+      <para>Bob和Alice在自己的机器上使用<command>gpg --gen-key</command>命令产生各自的密钥对，一把公钥和一把私钥，其中，公钥保存于<filename>~/.gnupg/pubring.gpg</filename>公钥环中，私钥保存于<filename>~/.gnupg/secring.gpg</filename>私钥环中。</para>
+      <figure><title>产生钥匙对</title><imagedata fileref="images/keygen.png"/></figure>
+      <para>可以通过<command>gpg --list-keys</command>来查看公钥，通过<command>gpg --list-secret-keys</command>来查看私钥。</para>
+      <para>最后Bob通过 <command>gpg -a -o bob.asc --export bob@lognovel.com</command> 导出自己的公钥<filename>bob.asc</filename> 。</para>
+      <para>Alice通过同样的方式产生自己的密钥对，并导出自己的公钥<filename>alice.asc</filename> 。</para>
+      <para>Alice和Bob已经可以交换各自的公钥并进行加密的通信了。</para>
+      <!-- screen><textobject><textdata  fileref="../files/bob_genkey.txt" /></textobject></screen -->
+  </sect1>
+
+  <sect1><title>交换公钥</title>
+      <figure><title>交换公钥</title><imagedata fileref="images/keyexchange.png"/></figure>
+      <para>Alice和Bob首先要获取对方的公钥，获得对方的公钥通常有如下的途径：</para>
+      <para>
+      <orderedlist>
+        <listitem><emphasis>通过互联网</emphasis>
+           <para>可以是电子邮件也可以是http或ftp下载，获得对方的公钥后，首先要将其导入到自己的公钥环中，例如，Bob获得了Alice的公钥后使用 <command>gpg --import alice.asc</command> 命令将其导入。</para>
+           <para>双方通过 <command>gpg --fingerprint</command> 命令来查看<filename>alice.asc</filename>的指纹，然后通过电话或双方认为安全的方式对指纹进行比对，用以确定<filename>alice.asc</filename>确实属于Alice。</para>
+
+        </listitem>
+        <listitem><emphasis>在黑客/开发人员聚会上</emphasis>
+           <para>在黑客/开发人员聚会上人们除了会交换自己的公钥外，更多的是交换各自的密钥指纹，通常情况下，很多黑客或开发人员会将自己的密钥指纹印制在名片上，下图是一张印刷了指纹的名片。</para>
+           <figure><title>Name Card</title><imagedata fileref="images/card.svg"/></figure>
+           <para>在黑客/开发人员在出示自己的指纹或交换印刷有指纹的名片时，还要出示自己的身份证、护照、学生证、士官证或其他有效的身份证件让对方进行查验。</para>
+           <tip>如果你要参加重要的黑客/开发人员会议（例如您参加lognovel开发人员的聚会），准备一张印刷有自己密钥指纹的名片是非常重要的，在这样的会议上通常会有较为正式的密钥指纹交换仪式，大家相互交换指纹并出示自己的有效身份证件，并相互查验。</tip>
+        </listitem>
+      </orderedlist>
+      </para>
+
+
+  </sect1>
+
+  <sect1><title>对公钥签名</title>
+      <para>Bob在确定<filename>alice.asc</filename>确实属于Alice后，便可以在Alice的公钥上签名，使用 </para>
+      <blockquote><para><command>gpg --edit-key alice@lognovel.com</command></para></blockquote>
+      <para>对Alice的公钥进行编辑，进入命令行以后再使用<command>sign</command>子命令进行签署。</para>
+
+  </sect1>
+
+  <sect1><title>发送信息</title>
+      <figure><title>发送信息</title><imagedata fileref="images/msgsend.png"/></figure>
+      <para>现在Bob已经有了Alice的公钥，并对其进行了确认，接下来，Bob就可以用Alice的公钥对信息进行加密，并将加密的信息发送给Alice了。</para>
+      <orderedlist>
+        <listitem><emphasis>Bob对信息进行加密</emphasis>
+           <para>Bob有一个程序文件<filename>code.php</filename>需要发送给Alice，Bob使用如下的命令对其进行加密：</para>
+           <blockquote><para><command>gpg -e code.php</command></para></blockquote>
+           <para>需要输入收件人的UID <command>Alice Lee</command>或<command>alice@lognovel.com</command></para>
+           <para>之后会生成一个新的文件<filename>code.php.gpg</filename>，Bob将这个加密后的文件发送给Alice。</para>
+        </listitem>
+        <listitem><emphasis>Alice对信息进行解密</emphasis>
+           <para>Alice在收到<filename>code.php.gpg</filename>后使用</para>
+           <blockquote><para><command>gpg -o code.php -d code.php.gpg</command></para></blockquote>
+           <para>命令进行解密，在解密过程中Alice需要输入在生成密钥时输入的“通行句”，正常解密后会生成<filename>code.php</filename>文件，这个文件的md5码和Bob机器上的<filename>code.php</filename>的md5码是一样的。</para>
+        </listitem>
+      </orderedlist>
+  </sect1>
+
+
+  <sect1><title>对发送的信息签名</title>
+      <para>前面Bob使用Alice的公钥对<filename>code.php</filename>进行了加密，并发送给了Alice，实际上，从Alice的角度来讲还是有风险的，因为Alice在收到<filename>code.php.gpg</filename>后，虽然可以使用自己的私钥解密，但她并不能确定这个文件一定是Bob发送给他的。Alice如何确定这个文件是Bob发送的呢？这就需要Bob多做一件事：对要发送的<filename>code.php</filename>进行数字签名，然后Alice用Bob的公钥对其进行确认。</para>
+      <para></para>
+
+
+
+      <para></para>
+
+           <orderedlist>
+                <listitem><para><emphasis>将加密文件和签名信息放在一个文件中</emphasis></para>
+                   <figure><title>将加密文件和签名放在一个文件中</title><imagedata fileref="images/msgsign01.png"/></figure>
+                   <blockquote><para><command>gpg -u bob@lognovel.com -r alice@lognovel.com -s -e code.php</command></para></blockquote>
+                   <para>这个命令将会生成<filename>code.php.gpg</filename>文件，这个文件中已经包含了Bob的签名信息。当Alice收到这个文件后使用</para>
+                   <blockquote><para><command>gpg -d code.php.gpg</command></para></blockquote>
+                   <para>会清晰的看到原文件和Bob的签名信息，前提是Alice一定要有Bob的公钥。</para>
+                </listitem>
+
+                <listitem><para><emphasis>将源文件和签名信息分离</emphasis></para>
+                   <blockquote><para><command>gpg -b code.php</command></para></blockquote>
+                   <para>这个命令将会生成<filename>code.php.sig</filename>文件，这个文件中已经包含了Bob的签名信息。当Alice收到<filename>code.php</filename>和<filename>code.php.sig</filename>文件后使用</para>
+                   <blockquote><para><command>gpg --verify code.php.sig</command></para></blockquote>
+                   <para>来验证发送者的身份。</para>
+                   <blockquote><para><command>gpg -a -b code.php</command></para></blockquote>
+                   <para>这个命令将会生成<filename>code.php.asc</filename>文件，这个文件中已经包含了Bob的签名信息。当Alice收到<filename>code.php</filename>和<filename>code.php.sig</filename>文件后使用</para>
+                   <blockquote><para><command>gpg --verify code.php.asc</command></para></blockquote>
+                   <para>来验证发送者的身份。</para>
+                </listitem>
+           </orderedlist>
+
+
+  </sect1>
+
+</chapter>
