@@ -30,13 +30,13 @@
   <revision>
         <revnumber>1.0</revnumber>
         <date>2021年10月10日.</date>
-        <authorinitials>ChunXin<email>doc@lognovel.com</email></authorinitials>
+        <authorinitials><email>doc@lognovel.com</email></authorinitials>
         <revremark>加入HTTP/1.1状态码部分</revremark>
      </revision>
      <revision>
         <revnumber>0.1</revnumber>
         <date>2021年8月16日.</date>
-        <authorinitials>ChunXin<email>doc@lognovel.com</email></authorinitials>
+        <authorinitials><email>doc@lognovel.com</email></authorinitials>
         <revremark>文档建立</revremark>
      </revision>
   </revhistory>
